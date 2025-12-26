@@ -1,0 +1,61 @@
+<resources>
+    <string name="app_name">Movie App</string>
+
+    <string name="search_hint">Film ara...</string>
+    <string name="search_button">Ara</string>
+    <string name="search_validation_error">Arama yapmak için bir film adı giriniz.</string>
+    <string name="no_results">Film bulunamadı.</string>
+    <string name="search_history_title">Son Aramalar</string>
+
+    <string name="add_to_favorites">Favoriye Ekle</string>
+    <string name="remove_from_favorites">Favoriden Çıkar</string>
+    <string name="rating_format">⭐ %.1f</string>
+
+    <string name="error_unknown">Beklenmedik bir hata oluştu.</string>
+    <string name="error_internet">İnternet bağlantısı yok.</string>
+
+    <string name="retry">Tekrar Dene</string>
+    <string name="welcome_title">Binlerce film arasında keşfe çıkın.</string>
+    <string name="welcome_subtitle">Aramak istediğiniz filmin adını yukarıya yazın.</string>
+
+    <string name="filter_title">Filtreleme Seçenekleri</string>
+    <string name="filter_year">Yayın Yılı</string>
+    <string name="filter_year_hint">Örn: 2023</string>
+    <string name="filter_score">Minimum IMDB Puanı</string>
+    <string name="filter_genre">Film Türü</string>
+    <string name="apply">Uygula</string>
+    <string name="clear_filters">Filtreleri Temizle</string>
+
+    <string name="genre_action">Aksiyon</string>
+    <string name="genre_adventure">Macera</string>
+    <string name="genre_animation">Animasyon</string>
+    <string name="genre_comedy">Komedi</string>
+    <string name="genre_crime">Suç</string>
+    <string name="genre_documentary">Belgesel</string>
+    <string name="genre_drama">Dram</string>
+    <string name="genre_family">Aile</string>
+    <string name="genre_fantasy">Fantastik</string>
+    <string name="genre_history">Tarih</string>
+    <string name="genre_horror">Korku</string>
+    <string name="genre_music">Müzik</string>
+    <string name="genre_mystery">Gizem</string>
+    <string name="genre_romance">Romantik</string>
+    <string name="genre_scifi">Bilim Kurgu</string>
+    <string name="genre_tv_movie">TV Filmi</string>
+    <string name="genre_thriller">Gerilim</string>
+    <string name="genre_war">Savaş</string>
+    <string name="genre_western">Vahşi Batı</string>
+
+    <string name="sort_title">Sıralama</string>
+    <string name="sort_default">Varsayılan (Alaka Düzeyi)</string>
+    <string name="sort_az">Alfabetik (A-Z)</string>
+    <string name="sort_za">Alfabetik (Z-A)</string>
+    <string name="sort_date">Yayın Tarihi (Yeniden Eskiye)</string>
+    <string name="sort_rating">Puan (Yüksekten Düşüğe)</string>
+
+    <string name="close">Kapat</string>
+    <string name="clear">Temizle</string>
+    <string name="filter">Filtrele</string>
+    <string name="recent_searches">Son Aramalar</string>
+    <string name="no_search_history">Henüz arama geçmişiniz yok.</string>
+</resources>
