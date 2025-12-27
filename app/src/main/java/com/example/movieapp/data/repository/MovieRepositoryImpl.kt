@@ -3,6 +3,10 @@ package com.example.movieapp.data.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import com.example.movieapp.R
+import com.example.movieapp.common.Resource
+import com.example.movieapp.data.mapper.toDomain
+import com.example.movieapp.data.mapper.toMovie
 import com.example.movieapp.data.remote.TmdbApi
 import com.example.movieapp.domain.model.Movie
 import com.example.movieapp.domain.repository.MovieRepository
@@ -28,5 +32,16 @@ class MovieRepositoryImpl @Inject constructor(
                 MoviePagingSource(api = api, query = query, year = year, sortOption = sortOption)
             }
         ).flow
+    }
+
+    override suspend fun getMovieDetail(movieId: Int): Resource<Movie> {
+        return try {
+            val remoteDto = api.getMovieDetail(movieId)
+            val movie = remoteDto.toMovie()
+            Resource.Success(movie)
+        } catch (e: Exception) {
+            //TODO
+            Resource.Error(e.localizedMessage)
+        }
     }
 }

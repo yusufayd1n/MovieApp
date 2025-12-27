@@ -15,5 +15,11 @@ data class MovieDto(
     @Json(name = "poster_path") val posterPath: String?,
     @Json(name = "release_date") val releaseDate: String?,
     @Json(name = "vote_average") val voteAverage: Double?,
-    @Json(name = "genre_ids") val genreIds: List<Int>?
+    @Json(name = "genre_ids") val genreIds: List<Int>?,
+    @Json(name = "genres") val genres: List<GenreDto>?
+)
+
+data class GenreDto(
+    @Json(name = "id") val id: Int,
+    @Json(name = "name") val name: String
 )

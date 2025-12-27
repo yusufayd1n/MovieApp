@@ -5,6 +5,6 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "search_history")
 data class SearchHistoryEntity(
-    @PrimaryKey val query: String, // query benzersiz anahtar olsun
+    @PrimaryKey val query: String,
     val timestamp: Long = System.currentTimeMillis()
 )

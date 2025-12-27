@@ -1,7 +1,9 @@
 package com.example.movieapp.data.remote
 
+import com.example.movieapp.data.remote.model.MovieDto
 import com.example.movieapp.data.remote.model.MovieResponse
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface TmdbApi {
@@ -12,4 +14,10 @@ interface TmdbApi {
         @Query("language") language: String = "tr-TR",
         @Query("primary_release_year") year: String? = null
     ): MovieResponse
+
+    @GET("movie/{movie_id}")
+    suspend fun getMovieDetail(
+        @Path("movie_id") movieId: Int,
+        @Query("language") language: String = "tr-TR"
+    ): MovieDto
 }

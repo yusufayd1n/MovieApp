@@ -66,4 +66,9 @@
     <string name="movie_added">Movie added to list.</string>
     <string name="movie_removed">Movie removed from list.</string>
 
+    <string name="back">Back</string>
+    <string name="overview">Overview</string>
+    <string name="release_date_prefix">Release Date: %1$s</string>
+    <string name="genres_title">Genres</string>
+
 </resources>
