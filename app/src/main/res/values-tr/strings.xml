@@ -74,4 +74,41 @@
     <string name="nav_home">Ana Sayfa</string>
     <string name="nav_favorites">Favoriler</string>
     <string name="nav_settings">Ayarlar</string>
+
+    <string name="movie_list_title">Film Listesi</string>
+    <string name="back_content_description">Geri</string>
+    <string name="empty_movie_list_message">Bu listede henüz film yok.</string>
+
+    <string name="remove_movie_dialog_title">Filmi Listeden Çıkar</string>
+    <string name="remove_movie_dialog_message">\'%1$s\' filmini bu listeden çıkarmak istediğinize emin misiniz?</string>
+    <string name="remove_action">Çıkar</string>
+    <string name="cancel_action">Vazgeç</string>
+
+    <string name="no_date_available">Tarih Yok</string>
+    <string name="rating_content_description">Puan</string>
+    <string name="remove_from_list_content_description">Listeden Çıkar</string>
+    <string name="add_to_another_list_title">Başka bir listeye ekle</string>
+    <string name="no_other_lists_message">Başka listeniz bulunmuyor.</string>
+    <string name="list_created_message">Liste başarıyla oluşturuldu.</string>
+    <string name="list_deleted_message">Liste silindi.</string>
+    <string name="list_renamed_message">Liste yeniden adlandırıldı.</string>
+
+    <string name="my_lists_title">Film Listelerim</string>
+    <string name="default_list_subtitle">Özel Liste</string>
+
+    <string name="add_list_content_description">Liste Ekle</string>
+    <string name="add_to_list_content_description">Başka listeye ekle</string>
+    <string name="create_new_list_button">Yeni Liste Oluştur</string>
+    <string name="rename_action">Yeniden Adlandır</string>
+    <string name="delete_action">Sil</string>
+    <string name="edit_action">Düzenle</string>
+    <string name="save_action">Kaydet</string>
+    <string name="cancel_dialog_action">Vazgeç</string>
+
+    <string name="create_new_list_title">Yeni Liste Oluştur</string>
+    <string name="rename_list_title">Listeyi Yeniden Adlandır</string>
+    <string name="delete_list_title">Listeyi Sil</string>
+
+    <string name="list_name_label">Liste Adı</string>
+    <string name="delete_list_confirmation_message">\'%1$s\' adlı listeyi ve içindeki tüm filmleri silmek istediğine emin misiniz? Bu işlem geri alınamaz.</string>
 </resources>

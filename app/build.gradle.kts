@@ -27,7 +27,7 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        val apiKey = localProperties.getProperty("tmdb.api.key") ?: ""
+        val apiKey = localProperties.getProperty("tmdb.api.key").orEmpty()
         buildConfigField("String", "API_KEY", apiKey)
     }
 

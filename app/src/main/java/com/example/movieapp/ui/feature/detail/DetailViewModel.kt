@@ -80,15 +80,23 @@ class DetailViewModel @Inject constructor(
     }
 
     fun toggleMovieInList(listId: Long, isChecked: Boolean) {
-        _favoriteListsState.update { currentList ->
-            currentList.map { if (it.id == listId) it.copy(isMovieInList = isChecked) else it }
-        }
+        val currentState = _movieState.value
 
-        viewModelScope.launch {
-            toggleMovieInListUseCase(listId, movieId, isChecked)
+        if (currentState is Resource.Success) {
+            val movie = currentState.data
 
-            val messageResId = if (isChecked) R.string.movie_added else R.string.movie_removed
-            _uiEvent.send(UiEvent.ShowSnackbar(messageResId))
+            _favoriteListsState.update { currentList ->
+                currentList.map { if (it.id == listId) it.copy(isMovieInList = isChecked) else it }
+            }
+
+            viewModelScope.launch {
+                movie?.let {
+                    toggleMovieInListUseCase(listId, movie, isChecked)
+                }
+
+                val messageResId = if (isChecked) R.string.movie_added else R.string.movie_removed
+                _uiEvent.send(UiEvent.ShowSnackbar(messageResId))
+            }
         }
     }
 

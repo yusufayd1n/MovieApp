@@ -7,7 +7,9 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import androidx.navigation.toRoute
 import com.example.movieapp.ui.feature.detail.DetailScreen
+import com.example.movieapp.ui.feature.favorites.FavoriteListDetailScreen
 import com.example.movieapp.ui.feature.favorites.FavoritesScreen
 import com.example.movieapp.ui.feature.search.SearchScreen
 import com.example.movieapp.ui.feature.settings.SettingsScreen
@@ -32,7 +34,19 @@ fun MovieNavHost(
         }
 
         composable<Screen.Favorites> {
-            FavoritesScreen()
+            FavoritesScreen(
+                onListClick = { listId ->
+                    navController.navigate(Screen.FavoriteListDetail(listId))
+                }
+            )
+        }
+
+        composable<Screen.FavoriteListDetail> { backStackEntry ->
+            val args = backStackEntry.toRoute<Screen.FavoriteListDetail>()
+
+            FavoriteListDetailScreen(
+                onBackClick = { navController.popBackStack() }
+            )
         }
 
         composable<Screen.Settings> {

@@ -5,6 +5,7 @@ import androidx.room.RoomDatabase
 import com.example.movieapp.data.local.dao.FavoriteListDao
 import com.example.movieapp.data.local.dao.SearchHistoryDao
 import com.example.movieapp.data.local.entity.FavoriteListEntity
+import com.example.movieapp.data.local.entity.MovieEntity
 import com.example.movieapp.data.local.entity.MovieListCrossRef
 import com.example.movieapp.data.local.entity.SearchHistoryEntity
 
@@ -12,7 +13,8 @@ import com.example.movieapp.data.local.entity.SearchHistoryEntity
     entities = [
         SearchHistoryEntity::class,
         FavoriteListEntity::class,
-        MovieListCrossRef::class
+        MovieListCrossRef::class,
+        MovieEntity::class
     ],
     version = 1,
     exportSchema = false

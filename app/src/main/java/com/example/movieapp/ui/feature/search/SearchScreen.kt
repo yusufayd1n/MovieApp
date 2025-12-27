@@ -31,6 +31,7 @@ import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.movieapp.R
 import com.example.movieapp.data.local.entity.SearchHistoryEntity
+import com.example.movieapp.domain.model.Movie
 import com.example.movieapp.ui.components.FilterBottomSheet
 import com.example.movieapp.ui.components.MovieCard
 
@@ -53,7 +54,7 @@ fun SearchScreen(
 
     var active by remember { mutableStateOf(false) }
     var showFilterSheet by remember { mutableStateOf(false) }
-    var selectedMovieForFavorites by remember { mutableStateOf<Int?>(null) }
+    var selectedMovieForFavorites by remember { mutableStateOf<Movie?>(null) }
 
     val interactionSource = remember { MutableInteractionSource() }
 
@@ -220,7 +221,7 @@ fun SearchScreen(
                                                 onNavigateToDetail(movie.id)
                                             },
                                             onToggleFavorite = {
-                                                selectedMovieForFavorites = movie.id
+                                                selectedMovieForFavorites = movie
                                                 viewModel.fetchListsForMovie(movie.id)
                                             }
                                         )
@@ -260,7 +261,12 @@ fun SearchScreen(
             snackBarHostState = sheetSnackbarHostState,
             onDismiss = { selectedMovieForFavorites = null },
             onToggleList = { listId, isChecked ->
-                viewModel.toggleMovieInList(listId, isChecked)
+                viewModel.toggleMovieInList(
+                    listId = listId,
+                    //there is a null check upside
+                    movie = selectedMovieForFavorites!!,
+                    isChecked = isChecked
+                )
             },
             onCreateList = { listName ->
                 viewModel.createNewList(listName)

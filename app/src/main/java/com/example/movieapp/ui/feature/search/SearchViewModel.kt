@@ -136,11 +136,9 @@ class SearchViewModel @Inject constructor(
         }
     }
 
-    fun toggleMovieInList(listId: Long, isChecked: Boolean) {
-        val movieId = currentSelectedMovieId ?: return
-
+    fun toggleMovieInList(listId: Long, isChecked: Boolean, movie: Movie) {
         viewModelScope.launch {
-            toggleMovieInListUseCase(listId, movieId, isChecked)
+            toggleMovieInListUseCase(listId, movie, isChecked)
 
             val messageResId = if (isChecked) R.string.movie_added else R.string.movie_removed
             sendEvent(UiEvent.ShowSnackbar(messageResId))

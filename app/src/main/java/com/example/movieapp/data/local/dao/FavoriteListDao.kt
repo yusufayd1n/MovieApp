@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.movieapp.data.local.entity.FavoriteListEntity
+import com.example.movieapp.data.local.entity.MovieEntity
 import com.example.movieapp.data.local.entity.MovieListCrossRef
 import kotlinx.coroutines.flow.Flow
 
@@ -16,11 +17,29 @@ interface FavoriteListDao {
     @Query("SELECT * FROM favorite_lists ORDER BY listId DESC")
     fun getAllFavoriteLists(): Flow<List<FavoriteListEntity>>
 
+    @Query("DELETE FROM favorite_lists WHERE listId = :listId")
+    suspend fun deleteList(listId: Long)
+
+    @Query("UPDATE favorite_lists SET listName = :newName WHERE listId = :listId")
+    suspend fun updateListName(listId: Long, newName: String)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertMovie(movie: MovieEntity)
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun addMovieToList(crossRef: MovieListCrossRef)
 
     @Query("DELETE FROM movie_list_cross_ref WHERE listId = :listId AND movieId = :movieId")
     suspend fun removeMovieFromList(listId: Long, movieId: Int)
+
+    @Query(
+        """
+        SELECT movies.* FROM movies 
+        INNER JOIN movie_list_cross_ref ON movies.id = movie_list_cross_ref.movieId 
+        WHERE movie_list_cross_ref.listId = :listId 
+        """
+    )
+    fun getMoviesByListId(listId: Long): Flow<List<MovieEntity>>
 
     @Query("SELECT listId FROM movie_list_cross_ref WHERE movieId = :movieId")
     fun getListIdsForMovie(movieId: Int): Flow<List<Long>>
@@ -30,4 +49,5 @@ interface FavoriteListDao {
 
     @Query("SELECT DISTINCT movieId FROM movie_list_cross_ref")
     fun getAllFavoriteMovieIdsFlow(): Flow<List<Int>>
+
 }
