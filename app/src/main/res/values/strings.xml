@@ -71,4 +71,8 @@
     <string name="release_date_prefix">Release Date: %1$s</string>
     <string name="genres_title">Genres</string>
 
+    <string name="nav_home">HomePage</string>
+    <string name="nav_favorites">Favorites</string>
+    <string name="nav_settings">Settings</string>
+
 </resources>

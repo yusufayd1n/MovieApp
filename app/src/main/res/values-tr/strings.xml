@@ -70,4 +70,8 @@
     <string name="overview">Özet</string>
     <string name="release_date_prefix">Vizyon Tarihi: %1$s</string>
     <string name="genres_title">Türler</string>
+
+    <string name="nav_home">Ana Sayfa</string>
+    <string name="nav_favorites">Favoriler</string>
+    <string name="nav_settings">Ayarlar</string>
 </resources>

@@ -3,6 +3,7 @@ package com.example.movieapp.ui.feature.detail
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import com.example.movieapp.R
 import com.example.movieapp.common.Resource
 import com.example.movieapp.domain.model.Movie
@@ -12,6 +13,7 @@ import com.example.movieapp.domain.usecase.favorites.GetAllFavoriteMovieIdsUseCa
 import com.example.movieapp.domain.usecase.favorites.GetFavoriteListsForMovieUseCase
 import com.example.movieapp.domain.usecase.favorites.ToggleMovieInListUseCase
 import com.example.movieapp.ui.feature.search.FavoriteListUiModel
+import com.example.movieapp.ui.navigation.screen.Screen
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -34,7 +36,8 @@ class DetailViewModel @Inject constructor(
     private val getAllFavoriteMovieIdsUseCase: GetAllFavoriteMovieIdsUseCase
 ) : ViewModel() {
 
-    private val movieId: Int = checkNotNull(savedStateHandle["movieId"])
+    private val args = savedStateHandle.toRoute<Screen.Detail>()
+    private val movieId = args.movieId
 
     private val _movieState = MutableStateFlow<Resource<Movie>>(Resource.Loading())
     val movieState = _movieState.asStateFlow()

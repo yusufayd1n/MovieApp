@@ -8,7 +8,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.movieapp.ui.feature.detail.DetailScreen
+import com.example.movieapp.ui.feature.favorites.FavoritesScreen
 import com.example.movieapp.ui.feature.search.SearchScreen
+import com.example.movieapp.ui.feature.settings.SettingsScreen
+import com.example.movieapp.ui.navigation.screen.Screen
 
 @Composable
 fun MovieNavHost(
@@ -17,28 +20,27 @@ fun MovieNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = "search",
+        startDestination = Screen.Search,
         modifier = modifier
     ) {
-        composable("search") {
+        composable<Screen.Search> {
             SearchScreen(
                 onNavigateToDetail = { movieId ->
-                    navController.navigate("detail/$movieId")
+                    navController.navigate(Screen.Detail(movieId))
                 }
             )
         }
 
-        composable(
-            route = "detail/{movieId}",
-            arguments = listOf(
-                navArgument("movieId") { type = NavType.IntType }
-            )
-        ) {
-            DetailScreen(
-                onNavigateUp = {
-                    navController.navigateUp()
-                }
-            )
+        composable<Screen.Favorites> {
+            FavoritesScreen()
+        }
+
+        composable<Screen.Settings> {
+            SettingsScreen()
+        }
+
+        composable<Screen.Detail> {
+            DetailScreen(onNavigateUp = { navController.navigateUp() })
         }
     }
 }
