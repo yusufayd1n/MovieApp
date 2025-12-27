@@ -16,3 +16,9 @@ data class FilterState(
     val selectedGenreId: Int? = null,
     val sortOption: SortOption = SortOption.DEFAULT
 )
+
+data class FavoriteListUiModel(
+    val id: Long,
+    val name: String,
+    val isMovieInList: Boolean
+)

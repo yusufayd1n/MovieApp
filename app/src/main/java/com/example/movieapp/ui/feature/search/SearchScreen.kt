@@ -3,11 +3,13 @@ package com.example.movieapp.ui.feature.search
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.List
@@ -40,6 +42,8 @@ fun SearchScreen(
 ) {
     val movies = viewModel.moviesState.collectAsLazyPagingItems()
     val searchHistory by viewModel.searchHistory.collectAsState()
+    val favoriteLists by viewModel.favoriteListsState.collectAsState()
+    val likedMovieIds by viewModel.likedMovieIds.collectAsState()
 
     val snackbarHostState = remember { SnackbarHostState() }
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -48,7 +52,7 @@ fun SearchScreen(
 
     var active by remember { mutableStateOf(false) }
     var showFilterSheet by remember { mutableStateOf(false) }
-
+    var selectedMovieForFavorites by remember { mutableStateOf<Int?>(null) }
     val interactionSource = remember { MutableInteractionSource() }
 
     LaunchedEffect(key1 = true) {
@@ -107,7 +111,7 @@ fun SearchScreen(
                         }) {
                             Icon(
                                 Icons.Default.Close,
-                                contentDescription = context.getString(R.string.close)
+                                contentDescription = stringResource(R.string.close)
                             )
                         }
                     } else {
@@ -120,14 +124,14 @@ fun SearchScreen(
                             IconButton(onClick = { viewModel.onQueryChange("") }) {
                                 Icon(
                                     Icons.Default.Close,
-                                    contentDescription = context.getString(R.string.clear)
+                                    contentDescription = stringResource(R.string.clear)
                                 )
                             }
                         }
                         IconButton(onClick = { showFilterSheet = true }) {
                             Icon(
                                 Icons.Default.List,
-                                contentDescription = context.getString(R.string.filter)
+                                contentDescription = stringResource(R.string.filter)
                             )
                         }
                     }
@@ -156,7 +160,7 @@ fun SearchScreen(
                         )
                     } else {
                         Text(
-                            text = context.getString(R.string.no_search_history),
+                            text = stringResource(R.string.no_search_history),
                             modifier = Modifier.padding(16.dp),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -207,14 +211,19 @@ fun SearchScreen(
                                 items(movies.itemCount) { index ->
                                     val movie = movies[index]
                                     if (movie != null) {
+                                        val isLiked = likedMovieIds.contains(movie.id)
                                         MovieCard(
                                             movie = movie,
-                                            isFavorite = false,
+                                            isFavorite = isLiked,
                                             onMovieClick = {
                                                 focusManager.clearFocus()
                                                 onNavigateToDetail(movie.id)
                                             },
-                                            onToggleFavorite = {})
+                                            onToggleFavorite = {
+                                                selectedMovieForFavorites = movie.id
+                                                viewModel.fetchListsForMovie(movie.id)
+                                            }
+                                        )
                                     }
                                 }
                                 if (loadState.append is LoadState.Loading) {
@@ -242,6 +251,108 @@ fun SearchScreen(
             currentFilter = viewModel.filterState,
             onApply = { newFilter -> viewModel.updateFilter(newFilter) },
             onDismiss = { showFilterSheet = false })
+    }
+
+    if (selectedMovieForFavorites != null) {
+        AddToFavoritesSheet(
+            lists = favoriteLists,
+            onDismiss = { selectedMovieForFavorites = null },
+            onToggleList = { listId, isChecked ->
+                viewModel.toggleMovieInList(listId, isChecked)
+            },
+            onCreateList = { listName ->
+                viewModel.createNewList(listName)
+            }
+        )
+    }
+}
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun AddToFavoritesSheet(
+    lists: List<FavoriteListUiModel>,
+    onDismiss: () -> Unit,
+    onToggleList: (Long, Boolean) -> Unit,
+    onCreateList: (String) -> Unit
+) {
+    var newListName by remember { mutableStateOf("") }
+    var showCreateInput by remember { mutableStateOf(false) }
+
+    ModalBottomSheet(onDismissRequest = onDismiss) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+                .padding(bottom = 32.dp)
+        ) {
+            Text(
+                text = stringResource(R.string.add_to_list_title),
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
+
+            LazyColumn(
+                modifier = Modifier.weight(1f, fill = false)
+            ) {
+                items(lists.size) { index ->
+                    val list = lists[index]
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { onToggleList(list.id, !list.isMovieInList) }
+                            .padding(vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Checkbox(
+                            checked = list.isMovieInList,
+                            onCheckedChange = { isChecked ->
+                                onToggleList(list.id, isChecked)
+                            }
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(text = list.name, style = MaterialTheme.typography.bodyLarge)
+                    }
+                }
+            }
+
+            Divider(modifier = Modifier.padding(vertical = 8.dp))
+
+            if (showCreateInput) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    OutlinedTextField(
+                        value = newListName,
+                        onValueChange = { newListName = it },
+                        placeholder = { Text(stringResource(R.string.list_name_hint)) },
+                        modifier = Modifier.weight(1f),
+                        singleLine = true
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Button(
+                        onClick = {
+                            onCreateList(newListName)
+                            newListName = ""
+                            showCreateInput = false
+                        },
+                        enabled = newListName.isNotBlank()
+                    ) {
+                        Text(stringResource(R.string.create))
+                    }
+                }
+            } else {
+                TextButton(
+                    onClick = { showCreateInput = true },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Icon(Icons.Default.Add, contentDescription = null)
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(stringResource(R.string.create_new_list))
+                }
+            }
+        }
     }
 }
 

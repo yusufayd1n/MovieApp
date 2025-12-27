@@ -59,4 +59,11 @@
     <string name="recent_searches">Recent Searches</string>
     <string name="no_search_history">No search history yet.</string>
 
+    <string name="add_to_list_title">Save to...</string>
+    <string name="create_new_list">Create New List</string>
+    <string name="list_name_hint">List Name</string>
+    <string name="create">Create</string>
+    <string name="movie_added">Movie added to list.</string>
+    <string name="movie_removed">Movie removed from list.</string>
+
 </resources>

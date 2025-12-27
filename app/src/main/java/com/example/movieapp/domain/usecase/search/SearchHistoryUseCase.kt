@@ -1,4 +1,4 @@
-package com.example.movieapp.domain.usecase
+package com.example.movieapp.domain.usecase.search
 
 import com.example.movieapp.domain.repository.SearchHistoryRepository
 import javax.inject.Inject

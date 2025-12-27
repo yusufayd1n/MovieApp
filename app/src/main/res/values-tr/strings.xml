@@ -58,4 +58,11 @@
     <string name="filter">Filtrele</string>
     <string name="recent_searches">Son Aramalar</string>
     <string name="no_search_history">Henüz arama geçmişiniz yok.</string>
+
+    <string name="add_to_list_title">Şuraya kaydet...</string>
+    <string name="create_new_list">Yeni Liste Oluştur</string>
+    <string name="list_name_hint">Liste Adı</string>
+    <string name="create">Oluştur</string>
+    <string name="movie_added">Film listeye eklendi.</string>
+    <string name="movie_removed">Film listeden çıkarıldı.</string>
 </resources>

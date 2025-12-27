@@ -1,4 +1,4 @@
-package com.example.movieapp.domain.usecase
+package com.example.movieapp.domain.usecase.search
 
 import androidx.paging.PagingData
 import com.example.movieapp.domain.model.Movie

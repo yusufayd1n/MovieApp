@@ -1,8 +1,10 @@
 package com.example.movieapp.di
 
+import android.app.Application
 import android.content.Context
 import androidx.room.Room
 import com.example.movieapp.data.local.MovieDatabase
+import com.example.movieapp.data.local.dao.FavoriteListDao
 import com.example.movieapp.data.local.dao.SearchHistoryDao
 import dagger.Module
 import dagger.Provides
@@ -29,5 +31,11 @@ object DatabaseModule {
     @Singleton
     fun provideSearchHistoryDao(database: MovieDatabase): SearchHistoryDao {
         return database.searchHistoryDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideFavoriteListDao(db: MovieDatabase): FavoriteListDao {
+        return db.favoriteListDao()
     }
 }
