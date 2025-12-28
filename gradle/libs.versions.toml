@@ -12,6 +12,9 @@ junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 mockitoCore = "5.7.0"
 mockitoKotlin = "5.2.1"
+mockk = "1.13.8"
+turbine = "1.0.0"
+archCoreTesting = "2.2.0"
 hilt = "2.51.1"
 retrofit = "2.11.0"
 moshi = "1.15.1"
@@ -23,6 +26,7 @@ coroutines = "1.9.0"
 paging = "3.2.1"
 serialization = "1.6.3"
 playServices = "4.4.2"
+
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -60,6 +64,11 @@ androidx-paging-runtime = { group = "androidx.paging", name = "paging-runtime", 
 androidx-paging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "paging" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }
 firebase-auth-ktx = { group = "com.google.firebase", name = "firebase-auth"}
+mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
+mockk-android = { module = "io.mockk:mockk-android", version.ref = "mockk" }
+turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
+androidx-core-testing = { module = "androidx.arch.core:core-testing", version.ref = "archCoreTesting" }
+androidx-paging-common = { group = "androidx.paging", name = "paging-common", version.ref = "paging" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
