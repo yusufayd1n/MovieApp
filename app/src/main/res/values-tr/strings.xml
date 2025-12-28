@@ -124,4 +124,7 @@
     <string name="register_success">Kayıt başarılı! Giriş yapabilirsiniz.</string>
     <string name="password_reset_sent">Şifre sıfırlama bağlantısı e-posta adresinize gönderildi.</string>
     <string name="logout_success">Başarıyla çıkış yapıldı.</string>
+    <string name="passwords_do_not_match_error">Şifreler eşleşmiyor.</string>
+    <string name="password_length_error">Şifre en az 6 karakter olmalıdır.</string>
+    <string name="registration_success">Kayıt başarılı! Lütfen giriş yapın.</string>
 </resources>

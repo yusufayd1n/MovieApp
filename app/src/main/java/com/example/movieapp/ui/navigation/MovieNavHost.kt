@@ -7,6 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.example.movieapp.ui.feature.auth.LoginScreen
+import com.example.movieapp.ui.feature.auth.RegisterScreen
 import com.example.movieapp.ui.feature.detail.DetailScreen
 import com.example.movieapp.ui.feature.favorites.FavoriteListDetailScreen
 import com.example.movieapp.ui.feature.favorites.FavoritesScreen
@@ -40,9 +41,7 @@ fun MovieNavHost(
             )
         }
 
-        composable<Screen.FavoriteListDetail> { backStackEntry ->
-            val args = backStackEntry.toRoute<Screen.FavoriteListDetail>()
-
+        composable<Screen.FavoriteListDetail> {
             FavoriteListDetailScreen(
                 onBackClick = { navController.popBackStack() }
             )
@@ -70,7 +69,17 @@ fun MovieNavHost(
         }
 
         composable<Screen.Register> {
-
+            RegisterScreen(
+                onNavigate = { screen ->
+                    if (screen == Screen.Login) {
+                        navController.navigate(screen) {
+                            popUpTo(Screen.Register) { inclusive = true }
+                        }
+                    } else {
+                        navController.navigate(screen)
+                    }
+                }
+            )
         }
     }
 }
