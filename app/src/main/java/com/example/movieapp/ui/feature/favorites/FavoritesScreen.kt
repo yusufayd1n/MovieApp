@@ -40,6 +40,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -50,28 +51,37 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.movieapp.R
+import com.example.movieapp.common.ObserveAsEvents
 import com.example.movieapp.common.UiEvent
 import com.example.movieapp.data.local.entity.FavoriteListEntity
+import com.example.movieapp.ui.navigation.screen.Screen
+import kotlinx.coroutines.launch
 
 @Composable
 fun FavoritesScreen(
-    viewModel: FavoritesViewModel = hiltViewModel(),
-    onListClick: (Long) -> Unit
+    onNavigate: (Screen) -> Unit,
+    viewModel: FavoritesViewModel = hiltViewModel()
 ) {
     val lists by viewModel.favoriteLists.collectAsStateWithLifecycle()
     val dialogState by viewModel.dialogState.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
 
-    LaunchedEffect(key1 = true) {
-        viewModel.uiEvent.collect { event ->
-            when (event) {
-                is UiEvent.ShowSnackbar -> {
-                    snackbarHostState.showSnackbar(
-                        message = context.getString(event.messageResId)
-                    )
+    ObserveAsEvents(viewModel.uiEvent) { event ->
+        when (event) {
+            is UiEvent.ShowSnackbar -> {
+                scope.launch {
+                    val message = event.remoteMessage ?: context.getString(event.messageResId)
+                    snackbarHostState.showSnackbar(message)
                 }
             }
+
+            is UiEvent.Navigate -> {
+                onNavigate(event.screen)
+            }
+
+            else -> Unit
         }
     }
 
@@ -96,7 +106,7 @@ fun FavoritesScreen(
             items(lists) { list ->
                 FavoriteListItem(
                     list = list,
-                    onClick = { onListClick(list.listId) },
+                    onClick = { viewModel.onListClicked(list.listId) },
                     onDeleteClick = { viewModel.onDeleteListClicked(list) },
                     onRenameClick = { viewModel.onRenameListClicked(list) }
                 )

@@ -30,16 +30,19 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.movieapp.R
+import com.example.movieapp.common.ObserveAsEvents
 import com.example.movieapp.common.UiEvent
 import com.example.movieapp.data.local.entity.SearchHistoryEntity
 import com.example.movieapp.domain.model.Movie
 import com.example.movieapp.ui.components.FilterBottomSheet
 import com.example.movieapp.ui.components.MovieCard
+import com.example.movieapp.ui.navigation.screen.Screen
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchScreen(
-    onNavigateToDetail: (Int) -> Unit,
+    onNavigate: (Screen) -> Unit,
     viewModel: SearchViewModel = hiltViewModel()
 ) {
     val movies = viewModel.moviesState.collectAsLazyPagingItems()
@@ -49,6 +52,7 @@ fun SearchScreen(
 
     val mainSnackbarHostState = remember { SnackbarHostState() }
     val sheetSnackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
 
     val keyboardController = LocalSoftwareKeyboardController.current
     val context = LocalContext.current
@@ -57,14 +61,13 @@ fun SearchScreen(
     var active by remember { mutableStateOf(false) }
     var showFilterSheet by remember { mutableStateOf(false) }
     var selectedMovieForFavorites by remember { mutableStateOf<Movie?>(null) }
-
     val interactionSource = remember { MutableInteractionSource() }
 
-    LaunchedEffect(key1 = true) {
-        viewModel.uiEvent.collect { event ->
-            when (event) {
-                is UiEvent.ShowSnackbar -> {
-                    val message = context.getString(event.messageResId)
+    ObserveAsEvents(viewModel.uiEvent) { event ->
+        when (event) {
+            is UiEvent.ShowSnackbar -> {
+                scope.launch {
+                    val message = event.remoteMessage ?: context.getString(event.messageResId)
                     if (selectedMovieForFavorites != null) {
                         sheetSnackbarHostState.showSnackbar(
                             message = message,
@@ -80,6 +83,12 @@ fun SearchScreen(
                     }
                 }
             }
+
+            is UiEvent.Navigate -> {
+                onNavigate(event.screen)
+            }
+
+            else -> Unit
         }
     }
 
@@ -228,7 +237,7 @@ fun SearchScreen(
                                             isFavorite = isLiked,
                                             onMovieClick = {
                                                 focusManager.clearFocus()
-                                                onNavigateToDetail(movie.id)
+                                                viewModel.onMovieClicked(movie.id)
                                             },
                                             onToggleFavorite = {
                                                 selectedMovieForFavorites = movie

@@ -9,6 +9,7 @@ import com.example.movieapp.domain.usecase.favorites.CreateFavoriteListUseCase
 import com.example.movieapp.domain.usecase.favorites.DeleteFavoriteListUseCase
 import com.example.movieapp.domain.usecase.favorites.GetAllFavoriteListsUseCase
 import com.example.movieapp.domain.usecase.favorites.RenameFavoriteListUseCase
+import com.example.movieapp.ui.navigation.screen.Screen
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -50,7 +51,7 @@ class FavoritesViewModel @Inject constructor(
         viewModelScope.launch {
             createListUseCase(name)
             onDialogDismiss()
-            sendEvent(UiEvent.ShowSnackbar(R.string.list_created_message))
+            showSnackbar(R.string.list_created_message)
         }
     }
 
@@ -58,7 +59,7 @@ class FavoritesViewModel @Inject constructor(
         viewModelScope.launch {
             deleteListUseCase(listId)
             onDialogDismiss()
-            sendEvent(UiEvent.ShowSnackbar(R.string.list_deleted_message))
+            showSnackbar(R.string.list_deleted_message)
         }
     }
 
@@ -66,8 +67,12 @@ class FavoritesViewModel @Inject constructor(
         viewModelScope.launch {
             renameListUseCase(listId, newName)
             onDialogDismiss()
-            sendEvent(UiEvent.ShowSnackbar(R.string.list_renamed_message))
+            showSnackbar(R.string.list_renamed_message)
         }
+    }
+
+    fun onListClicked(listId: Long) {
+        sendEvent(UiEvent.Navigate(Screen.FavoriteListDetail(listId)))
     }
 }
 

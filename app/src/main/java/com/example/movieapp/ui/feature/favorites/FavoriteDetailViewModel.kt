@@ -71,7 +71,7 @@ class FavoriteDetailViewModel @Inject constructor(
             removeMovieFromListUseCase(listId, movie.id)
             _movieToDelete.value = null
 
-            sendEvent(UiEvent.ShowSnackbar(R.string.movie_removed))
+            showSnackbar(R.string.movie_removed)
         }
     }
 
@@ -87,7 +87,7 @@ class FavoriteDetailViewModel @Inject constructor(
 
             _movieToMove.value = null
 
-            sendEvent(UiEvent.ShowSnackbar(R.string.movie_added))
+            showSnackbar(R.string.movie_added)
         }
     }
 }

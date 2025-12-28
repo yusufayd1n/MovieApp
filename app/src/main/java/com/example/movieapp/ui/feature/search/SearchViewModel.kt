@@ -18,6 +18,7 @@ import com.example.movieapp.domain.usecase.favorites.GetFavoriteListsForMovieUse
 import com.example.movieapp.domain.usecase.favorites.ToggleMovieInListUseCase
 import com.example.movieapp.domain.usecase.search.SearchHistoryUseCase
 import com.example.movieapp.domain.usecase.search.SearchMoviesUseCase
+import com.example.movieapp.ui.navigation.screen.Screen
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -83,7 +84,7 @@ class SearchViewModel @Inject constructor(
 
     fun searchMovies() {
         if (searchQuery.isBlank()) {
-            sendEvent(UiEvent.ShowSnackbar(R.string.search_validation_error))
+            showSnackbar(R.string.search_validation_error)
             return
         }
         hasSearched = true
@@ -126,6 +127,10 @@ class SearchViewModel @Inject constructor(
         }
     }
 
+    fun onMovieClicked(movieId: Int) {
+        sendEvent(UiEvent.Navigate(Screen.Detail(movieId)))
+    }
+
     fun createNewList(listName: String) {
         viewModelScope.launch {
             createFavoriteListUseCase(listName)
@@ -137,7 +142,7 @@ class SearchViewModel @Inject constructor(
             toggleMovieInListUseCase(listId, movie, isChecked)
 
             val messageResId = if (isChecked) R.string.movie_added else R.string.movie_removed
-            sendEvent(UiEvent.ShowSnackbar(messageResId))
+            showSnackbar(messageResId)
         }
     }
 }

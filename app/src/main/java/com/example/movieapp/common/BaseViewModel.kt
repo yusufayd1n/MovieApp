@@ -1,5 +1,6 @@
 package com.example.movieapp.common
 
+import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.channels.Channel
@@ -16,8 +17,8 @@ abstract class BaseViewModel : ViewModel() {
             _uiEvent.send(event)
         }
     }
-    
-    protected fun showSnackbar(messageResId: Int) {
-        sendEvent(UiEvent.ShowSnackbar(messageResId))
+
+    protected fun showSnackbar(messageResId: Int, remoteMessage: String? = null) {
+        sendEvent(UiEvent.ShowSnackbar(messageResId, remoteMessage))
     }
 }

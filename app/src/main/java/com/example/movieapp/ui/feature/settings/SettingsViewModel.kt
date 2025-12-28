@@ -2,6 +2,7 @@ package com.example.movieapp.ui.feature.settings
 
 import android.content.Context
 import androidx.lifecycle.viewModelScope
+import com.example.movieapp.R
 import com.example.movieapp.common.BaseViewModel
 import com.example.movieapp.common.LocaleHelper
 import com.example.movieapp.data.repository.SettingsRepository
@@ -21,7 +22,7 @@ class SettingsViewModel @Inject constructor(
     private val settingsRepository: SettingsRepository,
     @ApplicationContext private val context: Context
 ) : BaseViewModel() {
-    
+
     val currentUser = auth.currentUser
 
     val isDarkTheme = settingsRepository.isDarkTheme
@@ -38,12 +39,22 @@ class SettingsViewModel @Inject constructor(
 
     fun signOut() {
         auth.signOut()
+        showSnackbar(R.string.logout_success)
     }
 
     fun sendPasswordResetEmail() {
-        currentUser?.email?.let { email ->
-            auth.sendPasswordResetEmail(email)
-        }
+        val email = currentUser?.email ?: return
+
+        auth.sendPasswordResetEmail(email)
+            .addOnSuccessListener {
+                showSnackbar(R.string.password_reset_sent)
+            }
+            .addOnFailureListener { exception ->
+                showSnackbar(
+                    messageResId = R.string.error_unknown,
+                    remoteMessage = exception.localizedMessage
+                )
+            }
     }
 
     fun updateLanguage(code: String) {

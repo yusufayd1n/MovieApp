@@ -41,6 +41,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -55,9 +56,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.example.movieapp.R
 import com.example.movieapp.common.GenreConstants
+import com.example.movieapp.common.ObserveAsEvents
 import com.example.movieapp.common.Resource
 import com.example.movieapp.common.UiEvent
 import com.example.movieapp.ui.feature.search.AddToFavoritesSheet
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -72,18 +75,17 @@ fun DetailScreen(
     val favoriteLists by viewModel.favoriteListsState.collectAsState()
     var showBottomSheet by remember { mutableStateOf(false) }
     val sheetSnackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
 
-    LaunchedEffect(key1 = true) {
-        viewModel.uiEvent.collect { event ->
-            when (event) {
-                is UiEvent.ShowSnackbar -> {
-                    val message = context.getString(event.messageResId)
-                    sheetSnackbarHostState.showSnackbar(
-                        message = message,
-                        withDismissAction = true,
-                        duration = SnackbarDuration.Short
-                    )
-                }
+    ObserveAsEvents(viewModel.uiEvent) { event ->
+        if (event is UiEvent.ShowSnackbar) {
+            scope.launch {
+                val message = event.remoteMessage ?: context.getString(event.messageResId)
+                sheetSnackbarHostState.showSnackbar(
+                    message = message,
+                    withDismissAction = true,
+                    duration = SnackbarDuration.Short
+                )
             }
         }
     }

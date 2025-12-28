@@ -18,4 +18,10 @@ sealed class Screen {
 
     @Serializable
     data class Detail(val movieId: Int) : Screen()
+
+    @Serializable
+    data object Login : Screen()
+
+    @Serializable
+    data object Register : Screen()
 }

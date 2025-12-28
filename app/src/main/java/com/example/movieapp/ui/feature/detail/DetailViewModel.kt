@@ -91,7 +91,7 @@ class DetailViewModel @Inject constructor(
                 }
 
                 val messageResId = if (isChecked) R.string.movie_added else R.string.movie_removed
-                sendEvent(UiEvent.ShowSnackbar(messageResId))
+                showSnackbar(messageResId)
             }
         }
     }

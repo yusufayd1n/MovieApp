@@ -27,18 +27,22 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.movieapp.R
-import com.example.movieapp.common.LocaleHelper
+import com.example.movieapp.common.ObserveAsEvents
+import com.example.movieapp.common.UiEvent
+import com.example.movieapp.ui.navigation.screen.Screen
+import kotlinx.coroutines.launch
 
 @Composable
 fun SettingsScreen(
-    viewModel: SettingsViewModel = hiltViewModel(),
-    onLoginClick: () -> Unit,
-    onRegisterClick: () -> Unit
+    onNavigate: (Screen) -> Unit,
+    viewModel: SettingsViewModel = hiltViewModel()
 ) {
     val isDarkTheme by viewModel.isDarkTheme.collectAsStateWithLifecycle()
     val currentLanguage by viewModel.currentLanguage.collectAsStateWithLifecycle()
 
     val context = LocalContext.current
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
 
     var showLanguageDialog by remember { mutableStateOf(false) }
 
@@ -51,125 +55,140 @@ fun SettingsScreen(
         }
     }
 
-    val currentUser = viewModel.currentUser
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        Text(
-            text = stringResource(R.string.nav_settings),
-            style = MaterialTheme.typography.headlineMedium,
-            fontWeight = FontWeight.Bold
-        )
-
-        SettingsSectionTitle(text = stringResource(R.string.appearance_title))
-
-        SettingsCard {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
-                        imageVector = if (isDarkTheme) Icons.Default.Delete else Icons.Default.Add,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary
-                    )
-                    Spacer(modifier = Modifier.width(16.dp))
-                    Text(text = stringResource(R.string.dark_mode_label))
+    ObserveAsEvents(viewModel.uiEvent) { event ->
+        when (event) {
+            is UiEvent.ShowSnackbar -> {
+                scope.launch {
+                    val message = event.remoteMessage ?: context.getString(event.messageResId)
+                    snackbarHostState.showSnackbar(message)
                 }
-                Switch(
-                    checked = isDarkTheme,
-                    onCheckedChange = { viewModel.updateTheme(it) }
+            }
+
+            is UiEvent.Navigate -> {
+                onNavigate(event.screen)
+            }
+
+            else -> Unit
+        }
+    }
+
+    Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
+        containerColor = MaterialTheme.colorScheme.background
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .verticalScroll(rememberScrollState())
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Text(
+                text = stringResource(R.string.nav_settings),
+                style = MaterialTheme.typography.headlineMedium,
+                fontWeight = FontWeight.Bold
+            )
+
+            SettingsSectionTitle(text = stringResource(R.string.appearance_title))
+            SettingsCard {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                            if (isDarkTheme) Icons.Default.Delete else Icons.Default.Add,
+                            null,
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                        Spacer(Modifier.width(16.dp))
+                        Text(stringResource(R.string.dark_mode_label))
+                    }
+                    Switch(checked = isDarkTheme, onCheckedChange = { viewModel.updateTheme(it) })
+                }
+            }
+
+            SettingsSectionTitle(text = stringResource(R.string.language_region_title))
+            SettingsCard {
+                SettingsItem(
+                    icon = Icons.Default.LocationOn,
+                    title = stringResource(R.string.app_language_label),
+                    subtitle = stringResource(R.string.current_language_name),
+                    onClick = { showLanguageDialog = true }
                 )
             }
-        }
 
-        SettingsSectionTitle(text = stringResource(R.string.language_region_title))
-        SettingsCard {
-            SettingsItem(
-                icon = Icons.Default.LocationOn,
-                title = stringResource(R.string.app_language_label),
-                subtitle = stringResource(R.string.current_language_name),
-                onClick = { showLanguageDialog = true }
-            )
-        }
+            SettingsSectionTitle(text = stringResource(R.string.account_title))
 
-        SettingsSectionTitle(text = stringResource(R.string.account_title))
-
-        if (currentUser != null) {
-            SettingsCard {
-                Column {
-                    SettingsItem(
-                        icon = Icons.Default.Person,
-                        title = currentUser.email ?: stringResource(R.string.default_user_name),
-                        subtitle = stringResource(R.string.logged_in_status),
-                        onClick = {}
-                    )
-                    HorizontalDivider()
-                    SettingsItem(
-                        icon = Icons.Default.Lock,
-                        title = stringResource(R.string.change_password_action),
-                        onClick = { viewModel.sendPasswordResetEmail() }
-                    )
-                    HorizontalDivider()
-                    SettingsItem(
-                        icon = Icons.AutoMirrored.Filled.ExitToApp,
-                        title = stringResource(R.string.logout_action),
-                        titleColor = MaterialTheme.colorScheme.error,
-                        onClick = { viewModel.signOut() }
-                    )
+            if (viewModel.currentUser != null) {
+                SettingsCard {
+                    Column {
+                        SettingsItem(
+                            icon = Icons.Default.Person,
+                            title = viewModel.currentUser.email
+                                ?: stringResource(R.string.default_user_name),
+                            subtitle = stringResource(R.string.logged_in_status),
+                            onClick = {}
+                        )
+                        HorizontalDivider()
+                        SettingsItem(
+                            icon = Icons.Default.Lock,
+                            title = stringResource(R.string.change_password_action),
+                            onClick = { viewModel.sendPasswordResetEmail() }
+                        )
+                        HorizontalDivider()
+                        SettingsItem(
+                            icon = Icons.AutoMirrored.Filled.ExitToApp,
+                            title = stringResource(R.string.logout_action),
+                            titleColor = MaterialTheme.colorScheme.error,
+                            onClick = { viewModel.signOut() }
+                        )
+                    }
                 }
-            }
-        } else {
-            Card(
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Column(
-                    modifier = Modifier.padding(16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
+            } else {
+                Card(
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text(
-                        text = stringResource(R.string.login_promo_text),
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceEvenly
+                    Column(
+                        modifier = Modifier.padding(16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Button(onClick = onLoginClick) {
-                            Text(stringResource(R.string.login_button))
-                        }
-                        OutlinedButton(onClick = onRegisterClick) {
-                            Text(stringResource(R.string.register_button))
+                        Text(
+                            text = stringResource(R.string.login_promo_text),
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceEvenly
+                        ) {
+                            Button(onClick = { onNavigate(Screen.Login) }) {
+                                Text(stringResource(R.string.login_button))
+                            }
+                            OutlinedButton(onClick = { onNavigate(Screen.Register) }) {
+                                Text(stringResource(R.string.register_button))
+                            }
                         }
                     }
                 }
             }
-        }
 
-        Spacer(modifier = Modifier.weight(1f))
+            Spacer(modifier = Modifier.weight(1f))
 
-        Box(
-            modifier = Modifier.fillMaxWidth(),
-            contentAlignment = Alignment.Center
-        ) {
-            appVersion?.let {
-                Text(
-                    text = stringResource(R.string.version_format, appVersion),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+            Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                appVersion?.let {
+                    Text(
+                        stringResource(R.string.version_format, appVersion),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
             }
         }
     }
@@ -180,9 +199,7 @@ fun SettingsScreen(
             onDismiss = { showLanguageDialog = false },
             onLanguageSelected = { newLanguageCode ->
                 viewModel.updateLanguage(newLanguageCode)
-
                 showLanguageDialog = false
-
                 if (context is Activity) {
                     context.recreate()
                 }

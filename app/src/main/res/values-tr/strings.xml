@@ -1,23 +1,18 @@
 <resources>
     <string name="app_name">Movie App</string>
-
     <string name="search_hint">Film ara...</string>
     <string name="search_button">Ara</string>
     <string name="search_validation_error">Arama yapmak için bir film adı giriniz.</string>
     <string name="no_results">Film bulunamadı.</string>
     <string name="search_history_title">Son Aramalar</string>
-
     <string name="add_to_favorites">Favoriye Ekle</string>
     <string name="remove_from_favorites">Favoriden Çıkar</string>
     <string name="rating_format">⭐ %.1f</string>
-
     <string name="error_unknown">Beklenmedik bir hata oluştu.</string>
     <string name="error_internet">İnternet bağlantısı yok.</string>
-
     <string name="retry">Tekrar Dene</string>
     <string name="welcome_title">Binlerce film arasında keşfe çıkın.</string>
     <string name="welcome_subtitle">Aramak istediğiniz filmin adını yukarıya yazın.</string>
-
     <string name="filter_title">Filtreleme Seçenekleri</string>
     <string name="filter_year">Yayın Yılı</string>
     <string name="filter_year_hint">Örn: 2023</string>
@@ -25,7 +20,6 @@
     <string name="filter_genre">Film Türü</string>
     <string name="apply">Uygula</string>
     <string name="clear_filters">Filtreleri Temizle</string>
-
     <string name="genre_action">Aksiyon</string>
     <string name="genre_adventure">Macera</string>
     <string name="genre_animation">Animasyon</string>
@@ -45,45 +39,37 @@
     <string name="genre_thriller">Gerilim</string>
     <string name="genre_war">Savaş</string>
     <string name="genre_western">Vahşi Batı</string>
-
     <string name="sort_title">Sıralama</string>
     <string name="sort_default">Varsayılan (Alaka Düzeyi)</string>
     <string name="sort_az">Alfabetik (A-Z)</string>
     <string name="sort_za">Alfabetik (Z-A)</string>
     <string name="sort_date">Yayın Tarihi (Yeniden Eskiye)</string>
     <string name="sort_rating">Puan (Yüksekten Düşüğe)</string>
-
     <string name="close">Kapat</string>
     <string name="clear">Temizle</string>
     <string name="filter">Filtrele</string>
     <string name="recent_searches">Son Aramalar</string>
     <string name="no_search_history">Henüz arama geçmişiniz yok.</string>
-
     <string name="add_to_list_title">Şuraya kaydet...</string>
     <string name="create_new_list">Yeni Liste Oluştur</string>
     <string name="list_name_hint">Liste Adı</string>
     <string name="create">Oluştur</string>
     <string name="movie_added">Film listeye eklendi.</string>
     <string name="movie_removed">Film listeden çıkarıldı.</string>
-
     <string name="back">Geri</string>
     <string name="overview">Özet</string>
     <string name="release_date_prefix">Vizyon Tarihi: %1$s</string>
     <string name="genres_title">Türler</string>
-
     <string name="nav_home">Ana Sayfa</string>
     <string name="nav_favorites">Favoriler</string>
     <string name="nav_settings">Ayarlar</string>
-
     <string name="movie_list_title">Film Listesi</string>
     <string name="back_content_description">Geri</string>
     <string name="empty_movie_list_message">Bu listede henüz film yok.</string>
-
     <string name="remove_movie_dialog_title">Filmi Listeden Çıkar</string>
     <string name="remove_movie_dialog_message">\'%1$s\' filmini bu listeden çıkarmak istediğinize emin misiniz?</string>
     <string name="remove_action">Çıkar</string>
     <string name="cancel_action">Vazgeç</string>
-
     <string name="no_date_available">Tarih Yok</string>
     <string name="rating_content_description">Puan</string>
     <string name="remove_from_list_content_description">Listeden Çıkar</string>
@@ -92,10 +78,8 @@
     <string name="list_created_message">Liste başarıyla oluşturuldu.</string>
     <string name="list_deleted_message">Liste silindi.</string>
     <string name="list_renamed_message">Liste yeniden adlandırıldı.</string>
-
     <string name="my_lists_title">Film Listelerim</string>
     <string name="default_list_subtitle">Özel Liste</string>
-
     <string name="add_list_content_description">Liste Ekle</string>
     <string name="add_to_list_content_description">Başka listeye ekle</string>
     <string name="create_new_list_button">Yeni Liste Oluştur</string>
@@ -104,30 +88,40 @@
     <string name="edit_action">Düzenle</string>
     <string name="save_action">Kaydet</string>
     <string name="cancel_dialog_action">Vazgeç</string>
-
     <string name="create_new_list_title">Yeni Liste Oluştur</string>
     <string name="rename_list_title">Listeyi Yeniden Adlandır</string>
     <string name="delete_list_title">Listeyi Sil</string>
-
     <string name="list_name_label">Liste Adı</string>
     <string name="delete_list_confirmation_message">\'%1$s\' adlı listeyi ve içindeki tüm filmleri silmek istediğine emin misiniz? Bu işlem geri alınamaz.</string>
     <string name="appearance_title">Görünüm</string>
     <string name="dark_mode_label">Karanlık Mod</string>
-
     <string name="language_region_title">Dil ve Bölge</string>
     <string name="app_language_label">Uygulama Dili</string>
     <string name="current_language_name">Türkçe</string>
-
     <string name="account_title">Hesap</string>
     <string name="default_user_name">Kullanıcı</string>
     <string name="logged_in_status">Oturum Açık</string>
-
     <string name="change_password_action">Şifremi Değiştir</string>
     <string name="logout_action">Çıkış Yap</string>
-
     <string name="login_promo_text">Hesabınıza giriş yapın</string>
     <string name="login_button">Giriş Yap</string>
     <string name="register_button">Kayıt Ol</string>
-
     <string name="version_format">Versiyon %1$s</string>
+    <string name="login_title">Giriş Yap</string>
+    <string name="email_label">E-posta</string>
+    <string name="password_label">Şifre</string>
+    <string name="login_button_text">Giriş Yap</string>
+    <string name="dont_have_account">Hesabınız yok mu?</string>
+    <string name="register_now">Kayıt Ol</string>
+    <string name="fill_all_fields_error">Lütfen tüm alanları doldurunuz.</string>
+    <string name="login_failed_error">Giriş başarısız. Lütfen e-posta ve şifrenizi kontrol edin.</string>
+    <string name="register_title">Kayıt Ol</string>
+    <string name="confirm_password_label">Şifre Tekrar</string>
+    <string name="register_button_text">Kayıt Ol</string>
+    <string name="already_have_account">Zaten hesabınız var mı?</string>
+    <string name="login_now">Giriş Yap</string>
+    <string name="passwords_dont_match_error">Şifreler eşleşmiyor.</string>
+    <string name="register_success">Kayıt başarılı! Giriş yapabilirsiniz.</string>
+    <string name="password_reset_sent">Şifre sıfırlama bağlantısı e-posta adresinize gönderildi.</string>
+    <string name="logout_success">Başarıyla çıkış yapıldı.</string>
 </resources>

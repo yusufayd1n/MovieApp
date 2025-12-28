@@ -44,6 +44,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -58,8 +59,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.example.movieapp.R
+import com.example.movieapp.common.ObserveAsEvents
 import com.example.movieapp.common.UiEvent
 import com.example.movieapp.domain.model.Movie
+import kotlinx.coroutines.launch
 
 const val SMALL_IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w200"
 
@@ -76,18 +79,15 @@ fun FavoriteListDetailScreen(
     val movieToMove by viewModel.movieToMove.collectAsStateWithLifecycle()
 
     val sheetState = rememberModalBottomSheetState()
-
+    val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
 
-    LaunchedEffect(key1 = true) {
-        viewModel.uiEvent.collect { event ->
-            when (event) {
-                is UiEvent.ShowSnackbar -> {
-                    snackbarHostState.showSnackbar(
-                        message = context.getString(event.messageResId)
-                    )
-                }
+    ObserveAsEvents(viewModel.uiEvent) { event ->
+        if (event is UiEvent.ShowSnackbar) {
+            scope.launch {
+                val message = event.remoteMessage ?: context.getString(event.messageResId)
+                snackbarHostState.showSnackbar(message)
             }
         }
     }
