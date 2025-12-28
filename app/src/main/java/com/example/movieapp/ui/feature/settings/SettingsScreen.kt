@@ -39,6 +39,7 @@ fun SettingsScreen(
 ) {
     val isDarkTheme by viewModel.isDarkTheme.collectAsStateWithLifecycle()
     val currentLanguage by viewModel.currentLanguage.collectAsStateWithLifecycle()
+    val currentUser by viewModel.currentUserState.collectAsStateWithLifecycle()
 
     val context = LocalContext.current
     val snackbarHostState = remember { SnackbarHostState() }
@@ -124,12 +125,12 @@ fun SettingsScreen(
 
             SettingsSectionTitle(text = stringResource(R.string.account_title))
 
-            if (viewModel.currentUser != null) {
+            if (currentUser != null) {
                 SettingsCard {
                     Column {
                         SettingsItem(
                             icon = Icons.Default.Person,
-                            title = viewModel.currentUser.email
+                            title = currentUser?.email
                                 ?: stringResource(R.string.default_user_name),
                             subtitle = stringResource(R.string.logged_in_status),
                             onClick = {}

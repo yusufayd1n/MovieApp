@@ -7,11 +7,15 @@ import com.example.movieapp.common.BaseViewModel
 import com.example.movieapp.common.LocaleHelper
 import com.example.movieapp.data.repository.SettingsRepository
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -23,7 +27,17 @@ class SettingsViewModel @Inject constructor(
     @ApplicationContext private val context: Context
 ) : BaseViewModel() {
 
-    val currentUser = auth.currentUser
+    val currentUserState: StateFlow<FirebaseUser?> = callbackFlow {
+        val listener = FirebaseAuth.AuthStateListener { auth ->
+            trySend(auth.currentUser)
+        }
+        auth.addAuthStateListener(listener)
+        awaitClose { auth.removeAuthStateListener(listener) }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = auth.currentUser
+    )
 
     val isDarkTheme = settingsRepository.isDarkTheme
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
@@ -43,16 +57,13 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun sendPasswordResetEmail() {
-        val email = currentUser?.email ?: return
-
+        val email = currentUserState.value?.email ?: return
         auth.sendPasswordResetEmail(email)
-            .addOnSuccessListener {
-                showSnackbar(R.string.password_reset_sent)
-            }
-            .addOnFailureListener { exception ->
+            .addOnSuccessListener { showSnackbar(R.string.password_reset_sent) }
+            .addOnFailureListener { e ->
                 showSnackbar(
                     messageResId = R.string.error_unknown,
-                    remoteMessage = exception.localizedMessage
+                    remoteMessage = e.localizedMessage
                 )
             }
     }
