@@ -128,4 +128,9 @@
     <string name="password_length_error">Şifre en az 6 karakter olmalıdır.</string>
     <string name="registration_success">Kayıt başarılı! Lütfen giriş yapın.</string>
     <string name="login_required_error">Bu işlem için giriş yapmalısınız.</string>
+    <string name="password_reset_succes">Şifreniz başarılı bir şekilde değiştirildi</string>
+    <string name="change_password_title">Şifre Değiştir</string>
+    <string name="current_password_label">Mevcut Şifre</string>
+    <string name="new_password_label">Yeni Şifre</string>
+    <string name="update_action">Güncelle</string>
 </resources>

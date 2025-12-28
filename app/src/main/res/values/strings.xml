@@ -127,4 +127,9 @@
     <string name="password_length_error">Password must be at least 6 characters.</string>
     <string name="registration_success">Registration successful! Please login.</string>
     <string name="login_required_error">You need to sign in for this</string>
+    <string name="password_reset_succes">Your password has been successfully changed</string>
+    <string name="change_password_title">Change Password</string>
+    <string name="current_password_label">Current Password</string>
+    <string name="new_password_label">New Password</string>
+    <string name="update_action">Update</string>
 </resources>

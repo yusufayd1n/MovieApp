@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -139,7 +140,7 @@ fun SettingsScreen(
                         SettingsItem(
                             icon = Icons.Default.Lock,
                             title = stringResource(R.string.change_password_action),
-                            onClick = { viewModel.sendPasswordResetEmail() }
+                            onClick = { viewModel.showPasswordDialog()}
                         )
                         HorizontalDivider()
                         SettingsItem(
@@ -207,6 +208,57 @@ fun SettingsScreen(
             }
         )
     }
+
+    if (viewModel.showChangePasswordDialog) {
+        ChangePasswordDialog(
+            onDismiss = { viewModel.hidePasswordDialog() },
+            onConfirm = { oldPass, newPass ->
+                viewModel.changePassword(oldPass, newPass)
+            }
+        )
+    }
+}
+
+@Composable
+fun ChangePasswordDialog(
+    onDismiss: () -> Unit,
+    onConfirm: (String, String) -> Unit
+) {
+    var currentPassword by remember { mutableStateOf("") }
+    var newPassword by remember { mutableStateOf("") }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Şifre Değiştir") },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                OutlinedTextField(
+                    value = currentPassword,
+                    onValueChange = { currentPassword = it },
+                    label = { Text("Mevcut Şifre") },
+                    visualTransformation = PasswordVisualTransformation(),
+                    singleLine = true
+                )
+                OutlinedTextField(
+                    value = newPassword,
+                    onValueChange = { newPassword = it },
+                    label = { Text("Yeni Şifre") },
+                    visualTransformation = PasswordVisualTransformation(),
+                    singleLine = true
+                )
+            }
+        },
+        confirmButton = {
+            Button(onClick = { onConfirm(currentPassword, newPassword) }) {
+                Text("Güncelle")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text("İptal")
+            }
+        }
+    )
 }
 
 @Composable
