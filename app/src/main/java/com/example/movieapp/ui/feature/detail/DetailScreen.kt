@@ -56,6 +56,7 @@ import coil.compose.AsyncImage
 import com.example.movieapp.R
 import com.example.movieapp.common.GenreConstants
 import com.example.movieapp.common.Resource
+import com.example.movieapp.common.UiEvent
 import com.example.movieapp.ui.feature.search.AddToFavoritesSheet
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -75,7 +76,7 @@ fun DetailScreen(
     LaunchedEffect(key1 = true) {
         viewModel.uiEvent.collect { event ->
             when (event) {
-                is DetailViewModel.UiEvent.ShowSnackbar -> {
+                is UiEvent.ShowSnackbar -> {
                     val message = context.getString(event.messageResId)
                     sheetSnackbarHostState.showSnackbar(
                         message = message,

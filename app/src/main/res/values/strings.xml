@@ -112,4 +112,23 @@
 
     <string name="list_name_label">List Name</string>
     <string name="delete_list_confirmation_message">Are you sure you want to delete the list \'%1$s\' and all movies inside? This action cannot be undone.</string>
+    <string name="appearance_title">Appearance</string>
+    <string name="dark_mode_label">Dark Mode</string>
+
+    <string name="language_region_title">Language &amp; Region</string>
+    <string name="app_language_label">App Language</string>
+    <string name="current_language_name">English</string>
+
+    <string name="account_title">Account</string>
+    <string name="default_user_name">User</string>
+    <string name="logged_in_status">Logged In</string>
+
+    <string name="change_password_action">Change Password</string>
+    <string name="logout_action">Sign Out</string>
+
+    <string name="login_promo_text">Sign in to your account</string>
+    <string name="login_button">Login</string>
+    <string name="register_button">Register</string>
+
+    <string name="version_format">Version %1$s</string>
 </resources>

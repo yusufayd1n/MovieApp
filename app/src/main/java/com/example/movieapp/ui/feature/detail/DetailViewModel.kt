@@ -1,11 +1,12 @@
 package com.example.movieapp.ui.feature.detail
 
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.example.movieapp.R
+import com.example.movieapp.common.BaseViewModel
 import com.example.movieapp.common.Resource
+import com.example.movieapp.common.UiEvent
 import com.example.movieapp.domain.model.Movie
 import com.example.movieapp.domain.usecase.detail.GetMovieDetailUseCase
 import com.example.movieapp.domain.usecase.favorites.CreateFavoriteListUseCase
@@ -15,12 +16,10 @@ import com.example.movieapp.domain.usecase.favorites.ToggleMovieInListUseCase
 import com.example.movieapp.ui.feature.search.FavoriteListUiModel
 import com.example.movieapp.ui.navigation.screen.Screen
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -34,7 +33,7 @@ class DetailViewModel @Inject constructor(
     private val createFavoriteListUseCase: CreateFavoriteListUseCase,
     private val toggleMovieInListUseCase: ToggleMovieInListUseCase,
     private val getAllFavoriteMovieIdsUseCase: GetAllFavoriteMovieIdsUseCase
-) : ViewModel() {
+) : BaseViewModel() {
 
     private val args = savedStateHandle.toRoute<Screen.Detail>()
     private val movieId = args.movieId
@@ -47,9 +46,6 @@ class DetailViewModel @Inject constructor(
 
     val isFavorite = getAllFavoriteMovieIdsUseCase().map { it.contains(movieId) }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
-
-    private val _uiEvent = Channel<UiEvent>()
-    val uiEvent = _uiEvent.receiveAsFlow()
 
     init {
         fetchMovieDetail()
@@ -95,12 +91,8 @@ class DetailViewModel @Inject constructor(
                 }
 
                 val messageResId = if (isChecked) R.string.movie_added else R.string.movie_removed
-                _uiEvent.send(UiEvent.ShowSnackbar(messageResId))
+                sendEvent(UiEvent.ShowSnackbar(messageResId))
             }
         }
-    }
-
-    sealed class UiEvent {
-        data class ShowSnackbar(val messageResId: Int) : UiEvent()
     }
 }

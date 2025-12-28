@@ -1,10 +1,11 @@
 package com.example.movieapp.ui.feature.favorites
 
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.example.movieapp.R
+import com.example.movieapp.common.BaseViewModel
+import com.example.movieapp.common.UiEvent
 import com.example.movieapp.domain.model.Movie
 import com.example.movieapp.domain.usecase.favorites.GetAllFavoriteListsUseCase
 import com.example.movieapp.domain.usecase.favorites.GetMoviesByListIdUseCase
@@ -12,11 +13,9 @@ import com.example.movieapp.domain.usecase.favorites.RemoveMovieFromListUseCase
 import com.example.movieapp.domain.usecase.favorites.ToggleMovieInListUseCase
 import com.example.movieapp.ui.navigation.screen.Screen
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -28,7 +27,7 @@ class FavoriteDetailViewModel @Inject constructor(
     private val removeMovieFromListUseCase: RemoveMovieFromListUseCase,
     private val toggleMovieInListUseCase: ToggleMovieInListUseCase,
     private val getAllFavoriteListsUseCase: GetAllFavoriteListsUseCase
-) : ViewModel() {
+) : BaseViewModel() {
 
     private val routeArgs = savedStateHandle.toRoute<Screen.FavoriteListDetail>()
     val listId = routeArgs.listId
@@ -48,9 +47,6 @@ class FavoriteDetailViewModel @Inject constructor(
 
     private val _movieToMove = MutableStateFlow<Movie?>(null)
     val movieToMove = _movieToMove.asStateFlow()
-
-    private val _uiEvent = Channel<UiEvent>()
-    val uiEvent = _uiEvent.receiveAsFlow()
 
     fun onRemoveClick(movie: Movie) {
         _movieToDelete.value = movie
@@ -75,7 +71,7 @@ class FavoriteDetailViewModel @Inject constructor(
             removeMovieFromListUseCase(listId, movie.id)
             _movieToDelete.value = null
 
-            _uiEvent.send(UiEvent.ShowSnackbar(R.string.movie_removed))
+            sendEvent(UiEvent.ShowSnackbar(R.string.movie_removed))
         }
     }
 
@@ -91,11 +87,7 @@ class FavoriteDetailViewModel @Inject constructor(
 
             _movieToMove.value = null
 
-            _uiEvent.send(UiEvent.ShowSnackbar(R.string.movie_added))
+            sendEvent(UiEvent.ShowSnackbar(R.string.movie_added))
         }
     }
-}
-
-sealed class UiEvent {
-    data class ShowSnackbar(val messageResId: Int) : UiEvent()
 }

@@ -58,6 +58,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.example.movieapp.R
+import com.example.movieapp.common.UiEvent
 import com.example.movieapp.domain.model.Movie
 
 const val SMALL_IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w200"

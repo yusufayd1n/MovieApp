@@ -50,6 +50,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.movieapp.R
+import com.example.movieapp.common.UiEvent
 import com.example.movieapp.data.local.entity.FavoriteListEntity
 
 @Composable
@@ -65,7 +66,7 @@ fun FavoritesScreen(
     LaunchedEffect(key1 = true) {
         viewModel.uiEvent.collect { event ->
             when (event) {
-                is FavoritesViewModel.UiEvent.ShowSnackbar -> {
+                is UiEvent.ShowSnackbar -> {
                     snackbarHostState.showSnackbar(
                         message = context.getString(event.messageResId)
                     )

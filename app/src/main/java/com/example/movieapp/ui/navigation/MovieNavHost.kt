@@ -50,7 +50,7 @@ fun MovieNavHost(
         }
 
         composable<Screen.Settings> {
-            SettingsScreen()
+            SettingsScreen(onRegisterClick = {}, onLoginClick = {})
         }
 
         composable<Screen.Detail> {

@@ -1,5 +1,7 @@
 [versions]
 agp = "8.10.0"
+datastorePreferences = "1.2.0"
+firebaseBom = "34.7.0"
 kotlin = "2.0.21"
 coreKtx = "1.15.0"
 lifecycleRuntimeKtx = "2.8.7"
@@ -20,9 +22,12 @@ coil = "2.7.0"
 coroutines = "1.9.0"
 paging = "3.2.1"
 serialization = "1.6.3"
+playServices = "4.4.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
+firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -54,6 +59,7 @@ mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", versio
 androidx-paging-runtime = { group = "androidx.paging", name = "paging-runtime", version.ref = "paging" }
 androidx-paging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "paging" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }
+firebase-auth-ktx = { group = "com.google.firebase", name = "firebase-auth"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -61,3 +67,4 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 hiltAndroid = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+play-services= { id = "com.google.gms.google-services", version.ref = "playServices" }

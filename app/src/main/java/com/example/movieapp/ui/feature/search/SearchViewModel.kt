@@ -3,12 +3,13 @@ package com.example.movieapp.ui.feature.search
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.filter
 import com.example.movieapp.R
+import com.example.movieapp.common.BaseViewModel
+import com.example.movieapp.common.UiEvent
 import com.example.movieapp.data.local.entity.SearchHistoryEntity
 import com.example.movieapp.domain.model.Movie
 import com.example.movieapp.domain.usecase.favorites.CreateFavoriteListUseCase
@@ -18,13 +19,11 @@ import com.example.movieapp.domain.usecase.favorites.ToggleMovieInListUseCase
 import com.example.movieapp.domain.usecase.search.SearchHistoryUseCase
 import com.example.movieapp.domain.usecase.search.SearchMoviesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -37,7 +36,7 @@ class SearchViewModel @Inject constructor(
     private val createFavoriteListUseCase: CreateFavoriteListUseCase,
     private val toggleMovieInListUseCase: ToggleMovieInListUseCase,
     private val getAllFavoriteMovieIdsUseCase: GetAllFavoriteMovieIdsUseCase
-) : ViewModel() {
+) : BaseViewModel() {
 
     var searchQuery by mutableStateOf("")
         private set
@@ -53,9 +52,6 @@ class SearchViewModel @Inject constructor(
 
     private val _favoriteListsState = MutableStateFlow<List<FavoriteListUiModel>>(emptyList())
     val favoriteListsState = _favoriteListsState.asStateFlow()
-
-    private val _uiEvent = Channel<UiEvent>()
-    val uiEvent = _uiEvent.receiveAsFlow()
 
     val searchHistory: StateFlow<List<SearchHistoryEntity>> = searchHistoryUseCase.getHistory()
         .stateIn(
@@ -143,15 +139,5 @@ class SearchViewModel @Inject constructor(
             val messageResId = if (isChecked) R.string.movie_added else R.string.movie_removed
             sendEvent(UiEvent.ShowSnackbar(messageResId))
         }
-    }
-
-    private fun sendEvent(event: UiEvent) {
-        viewModelScope.launch {
-            _uiEvent.send(event)
-        }
-    }
-
-    sealed class UiEvent {
-        data class ShowSnackbar(val messageResId: Int) : UiEvent()
     }
 }

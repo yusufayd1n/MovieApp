@@ -30,6 +30,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.movieapp.R
+import com.example.movieapp.common.UiEvent
 import com.example.movieapp.data.local.entity.SearchHistoryEntity
 import com.example.movieapp.domain.model.Movie
 import com.example.movieapp.ui.components.FilterBottomSheet
@@ -46,6 +47,7 @@ fun SearchScreen(
     val favoriteLists by viewModel.favoriteListsState.collectAsState()
     val likedMovieIds by viewModel.likedMovieIds.collectAsState()
 
+    val mainSnackbarHostState = remember { SnackbarHostState() }
     val sheetSnackbarHostState = remember { SnackbarHostState() }
 
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -61,10 +63,17 @@ fun SearchScreen(
     LaunchedEffect(key1 = true) {
         viewModel.uiEvent.collect { event ->
             when (event) {
-                is SearchViewModel.UiEvent.ShowSnackbar -> {
+                is UiEvent.ShowSnackbar -> {
+                    val message = context.getString(event.messageResId)
                     if (selectedMovieForFavorites != null) {
                         sheetSnackbarHostState.showSnackbar(
-                            message = context.getString(event.messageResId),
+                            message = message,
+                            withDismissAction = true,
+                            duration = SnackbarDuration.Short
+                        )
+                    } else {
+                        mainSnackbarHostState.showSnackbar(
+                            message = message,
                             withDismissAction = true,
                             duration = SnackbarDuration.Short
                         )
@@ -75,7 +84,8 @@ fun SearchScreen(
     }
 
     Scaffold(
-        containerColor = MaterialTheme.colorScheme.background
+        containerColor = MaterialTheme.colorScheme.background,
+        snackbarHost = { SnackbarHost(hostState = mainSnackbarHostState) }
     ) { paddingValues ->
         Column(
             modifier = Modifier

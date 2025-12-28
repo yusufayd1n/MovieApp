@@ -111,4 +111,23 @@
 
     <string name="list_name_label">Liste Adı</string>
     <string name="delete_list_confirmation_message">\'%1$s\' adlı listeyi ve içindeki tüm filmleri silmek istediğine emin misiniz? Bu işlem geri alınamaz.</string>
+    <string name="appearance_title">Görünüm</string>
+    <string name="dark_mode_label">Karanlık Mod</string>
+
+    <string name="language_region_title">Dil ve Bölge</string>
+    <string name="app_language_label">Uygulama Dili</string>
+    <string name="current_language_name">Türkçe</string>
+
+    <string name="account_title">Hesap</string>
+    <string name="default_user_name">Kullanıcı</string>
+    <string name="logged_in_status">Oturum Açık</string>
+
+    <string name="change_password_action">Şifremi Değiştir</string>
+    <string name="logout_action">Çıkış Yap</string>
+
+    <string name="login_promo_text">Hesabınıza giriş yapın</string>
+    <string name="login_button">Giriş Yap</string>
+    <string name="register_button">Kayıt Ol</string>
+
+    <string name="version_format">Versiyon %1$s</string>
 </resources>
