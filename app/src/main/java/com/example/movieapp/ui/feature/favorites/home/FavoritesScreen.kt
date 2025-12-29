@@ -75,8 +75,7 @@ fun FavoritesScreen(
     onBackPressed: () -> Unit,
     viewModel: FavoritesViewModel = hiltViewModel()
 ) {
-    val lists by viewModel.favoriteLists.collectAsStateWithLifecycle()
-    val dialogState by viewModel.dialogState.collectAsStateWithLifecycle()
+    val state by viewModel.state.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -133,7 +132,7 @@ fun FavoritesScreen(
             )
         }
     ) { padding ->
-        if (lists.isEmpty()) {
+        if (state.favoriteLists.isEmpty()) {
             EmptyStateView(modifier = Modifier.padding(padding))
         } else {
             LazyColumn(
@@ -143,7 +142,7 @@ fun FavoritesScreen(
                 contentPadding = PaddingValues(16.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                items(lists, key = { it.listId }) { list ->
+                items(state.favoriteLists, key = { it.listId }) { list ->
                     FavoriteListItem(
                         list = list,
                         onClick = { viewModel.onListClicked(list.listId) },
@@ -154,7 +153,7 @@ fun FavoritesScreen(
             }
         }
 
-        HandleDialogs(dialogState, viewModel)
+        HandleDialogs(state.dialogState, viewModel)
     }
 }
 

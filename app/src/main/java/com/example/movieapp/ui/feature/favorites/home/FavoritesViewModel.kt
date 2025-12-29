@@ -12,9 +12,8 @@ import com.example.movieapp.domain.usecase.favorites.RenameFavoriteListUseCase
 import com.example.movieapp.ui.navigation.screen.Screen
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -25,26 +24,37 @@ class FavoritesViewModel @Inject constructor(
     private val deleteListUseCase: DeleteFavoriteListUseCase,
     private val renameListUseCase: RenameFavoriteListUseCase
 ) : BaseViewModel() {
-    val favoriteLists = getAllListsUseCase()
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-    private val _dialogState = MutableStateFlow<FavoritesDialogState>(FavoritesDialogState.None)
-    val dialogState = _dialogState.asStateFlow()
+    // Tek bir State Flow
+    private val _state = MutableStateFlow(FavoritesState())
+    val state = _state.asStateFlow()
+
+    init {
+        observeLists()
+    }
+
+    private fun observeLists() {
+        viewModelScope.launch {
+            getAllListsUseCase().collect { lists ->
+                _state.update { it.copy(favoriteLists = lists) }
+            }
+        }
+    }
 
     fun onAddListClicked() {
-        _dialogState.value = FavoritesDialogState.Create
+        _state.update { it.copy(dialogState = FavoritesDialogState.Create) }
     }
 
     fun onDeleteListClicked(list: FavoriteListEntity) {
-        _dialogState.value = FavoritesDialogState.Delete(list)
+        _state.update { it.copy(dialogState = FavoritesDialogState.Delete(list)) }
     }
 
     fun onRenameListClicked(list: FavoriteListEntity) {
-        _dialogState.value = FavoritesDialogState.Rename(list)
+        _state.update { it.copy(dialogState = FavoritesDialogState.Rename(list)) }
     }
 
     fun onDialogDismiss() {
-        _dialogState.value = FavoritesDialogState.None
+        _state.update { it.copy(dialogState = FavoritesDialogState.None) }
     }
 
     fun createList(name: String) {
@@ -75,7 +85,6 @@ class FavoritesViewModel @Inject constructor(
         sendEvent(UiEvent.Navigate(Screen.FavoriteListDetail(listId)))
     }
 }
-
 
 sealed interface FavoritesDialogState {
     data object None : FavoritesDialogState
