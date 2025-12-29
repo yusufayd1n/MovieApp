@@ -1,14 +1,14 @@
-package com.example.movieapp.ui.feature.auth
+package com.example.movieapp.ui.feature.auth.login
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import com.example.movieapp.R
 import com.example.movieapp.common.ui.BaseViewModel
 import com.example.movieapp.common.ui.UiEvent
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -17,43 +17,37 @@ class LoginViewModel @Inject constructor(
     private val auth: FirebaseAuth
 ) : BaseViewModel() {
 
-    var email by mutableStateOf("")
-        private set
-
-    var password by mutableStateOf("")
-        private set
-
-    var isLoading by mutableStateOf(false)
-        private set
+    private val _state = MutableStateFlow(LoginState())
+    val state = _state.asStateFlow()
 
     fun onEmailChange(newValue: String) {
-        email = newValue
+        _state.update { it.copy(email = newValue) }
     }
 
     fun onPasswordChange(newValue: String) {
-        password = newValue
+        _state.update { it.copy(password = newValue) }
     }
 
     fun login() {
-        if (email.isBlank() || password.isBlank()) {
+        val currentState = _state.value
+        if (currentState.email.isBlank() || currentState.password.isBlank()) {
             showSnackbar(R.string.fill_all_fields_error)
             return
         }
 
-        isLoading = true
+        _state.update { it.copy(isLoading = true) }
 
         viewModelScope.launch {
-            auth.signInWithEmailAndPassword(email, password)
+            auth.signInWithEmailAndPassword(currentState.email, currentState.password)
                 .addOnSuccessListener {
-                    isLoading = false
+                    _state.update { it.copy(isLoading = false) }
                     sendEvent(UiEvent.PopBackStack)
                 }
                 .addOnFailureListener { exception ->
-                    isLoading = false
-                    val errorMessage = exception.localizedMessage
+                    _state.update { it.copy(isLoading = false) }
                     showSnackbar(
                         messageResId = R.string.error_unknown,
-                        remoteMessage = errorMessage
+                        remoteMessage = exception.localizedMessage
                     )
                 }
         }

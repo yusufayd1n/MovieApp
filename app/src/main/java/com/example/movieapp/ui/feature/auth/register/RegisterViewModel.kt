@@ -1,8 +1,5 @@
-package com.example.movieapp.ui.feature.auth
+package com.example.movieapp.ui.feature.auth.register
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import com.example.movieapp.R
 import com.example.movieapp.common.ui.BaseViewModel
@@ -10,6 +7,9 @@ import com.example.movieapp.common.ui.UiEvent
 import com.example.movieapp.ui.navigation.screen.Screen
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -18,50 +18,50 @@ class RegisterViewModel @Inject constructor(
     private val auth: FirebaseAuth
 ) : BaseViewModel() {
 
-    var email by mutableStateOf("")
-        private set
+    private val _state = MutableStateFlow(RegisterState())
+    val state = _state.asStateFlow()
 
-    var password by mutableStateOf("")
-        private set
+    fun onEmailChange(newValue: String) {
+        _state.update { it.copy(email = newValue) }
+    }
 
-    var confirmPassword by mutableStateOf("")
-        private set
+    fun onPasswordChange(newValue: String) {
+        _state.update { it.copy(password = newValue) }
+    }
 
-    var isLoading by mutableStateOf(false)
-        private set
-
-    fun onEmailChange(newValue: String) { email = newValue }
-    fun onPasswordChange(newValue: String) { password = newValue }
-    fun onConfirmPasswordChange(newValue: String) { confirmPassword = newValue }
+    fun onConfirmPasswordChange(newValue: String) {
+        _state.update { it.copy(confirmPassword = newValue) }
+    }
 
     fun register() {
-        if (email.isBlank() || password.isBlank() || confirmPassword.isBlank()) {
+        val currentState = _state.value
+
+        if (currentState.email.isBlank() || currentState.password.isBlank() || currentState.confirmPassword.isBlank()) {
             showSnackbar(R.string.fill_all_fields_error)
             return
         }
 
-        if (password != confirmPassword) {
+        if (currentState.password != currentState.confirmPassword) {
             showSnackbar(R.string.passwords_do_not_match_error)
             return
         }
 
-        if (password.length < 6) {
+        if (currentState.password.length < 6) {
             showSnackbar(R.string.password_length_error)
             return
         }
 
-        isLoading = true
+        _state.update { it.copy(isLoading = true) }
 
         viewModelScope.launch {
-            auth.createUserWithEmailAndPassword(email, password)
+            auth.createUserWithEmailAndPassword(currentState.email, currentState.password)
                 .addOnSuccessListener {
-                    isLoading = false
+                    _state.update { it.copy(isLoading = false) }
                     showSnackbar(R.string.registration_success)
-
                     sendEvent(UiEvent.Navigate(Screen.Login))
                 }
                 .addOnFailureListener { exception ->
-                    isLoading = false
+                    _state.update { it.copy(isLoading = false) }
                     showSnackbar(
                         messageResId = R.string.error_unknown,
                         remoteMessage = exception.localizedMessage

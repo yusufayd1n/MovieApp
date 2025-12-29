@@ -1,4 +1,4 @@
-package com.example.movieapp.ui.feature.auth
+package com.example.movieapp.ui.feature.auth.register
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
@@ -17,6 +17,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.movieapp.R
 import com.example.movieapp.common.ui.ObserveAsEvents
 import com.example.movieapp.common.ui.UiEvent
@@ -28,6 +29,8 @@ fun RegisterScreen(
     onNavigate: (Screen) -> Unit,
     viewModel: RegisterViewModel = hiltViewModel()
 ) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
     val context = LocalContext.current
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
@@ -43,9 +46,7 @@ fun RegisterScreen(
                     snackbarHostState.showSnackbar(message)
                 }
             }
-            is UiEvent.Navigate -> {
-                onNavigate(event.screen)
-            }
+            is UiEvent.Navigate -> onNavigate(event.screen)
             else -> Unit
         }
     }
@@ -72,7 +73,7 @@ fun RegisterScreen(
                 )
 
                 OutlinedTextField(
-                    value = viewModel.email,
+                    value = state.email,
                     onValueChange = viewModel::onEmailChange,
                     label = { Text(stringResource(R.string.email_label)) },
                     singleLine = true,
@@ -82,7 +83,7 @@ fun RegisterScreen(
                 )
 
                 OutlinedTextField(
-                    value = viewModel.password,
+                    value = state.password,
                     onValueChange = viewModel::onPasswordChange,
                     label = { Text(stringResource(R.string.password_label)) },
                     singleLine = true,
@@ -98,7 +99,7 @@ fun RegisterScreen(
                 )
 
                 OutlinedTextField(
-                    value = viewModel.confirmPassword,
+                    value = state.confirmPassword,
                     onValueChange = viewModel::onConfirmPasswordChange,
                     label = { Text(stringResource(R.string.confirm_password_label)) },
                     singleLine = true,
@@ -116,9 +117,9 @@ fun RegisterScreen(
                 Button(
                     onClick = viewModel::register,
                     modifier = Modifier.fillMaxWidth().height(50.dp),
-                    enabled = !viewModel.isLoading
+                    enabled = !state.isLoading
                 ) {
-                    if (viewModel.isLoading) {
+                    if (state.isLoading) {
                         CircularProgressIndicator(modifier = Modifier.size(24.dp), color = MaterialTheme.colorScheme.onPrimary)
                     } else {
                         Text(stringResource(R.string.register_button))

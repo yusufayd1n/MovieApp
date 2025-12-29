@@ -1,4 +1,4 @@
-package com.example.movieapp.ui.feature.auth
+package com.example.movieapp.ui.feature.auth.login
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
@@ -17,12 +17,12 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.movieapp.R
 import com.example.movieapp.common.ui.ObserveAsEvents
 import com.example.movieapp.common.ui.UiEvent
 import com.example.movieapp.ui.navigation.screen.Screen
 import kotlinx.coroutines.launch
-
 
 @Composable
 fun LoginScreen(
@@ -30,6 +30,8 @@ fun LoginScreen(
     onLoginSuccess: () -> Unit,
     viewModel: LoginViewModel = hiltViewModel()
 ) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
     val context = LocalContext.current
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
@@ -44,14 +46,8 @@ fun LoginScreen(
                     snackbarHostState.showSnackbar(messageText)
                 }
             }
-
-            is UiEvent.Navigate -> {
-                onNavigate(event.screen)
-            }
-
-            UiEvent.PopBackStack -> {
-                onLoginSuccess()
-            }
+            is UiEvent.Navigate -> onNavigate(event.screen)
+            UiEvent.PopBackStack -> onLoginSuccess()
         }
     }
 
@@ -77,7 +73,7 @@ fun LoginScreen(
                 )
 
                 OutlinedTextField(
-                    value = viewModel.email,
+                    value = state.email,
                     onValueChange = viewModel::onEmailChange,
                     label = { Text(stringResource(R.string.email_label)) },
                     singleLine = true,
@@ -87,7 +83,7 @@ fun LoginScreen(
                 )
 
                 OutlinedTextField(
-                    value = viewModel.password,
+                    value = state.password,
                     onValueChange = viewModel::onPasswordChange,
                     label = { Text(stringResource(R.string.password_label)) },
                     singleLine = true,
@@ -107,12 +103,10 @@ fun LoginScreen(
 
                 Button(
                     onClick = viewModel::login,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(50.dp),
-                    enabled = !viewModel.isLoading
+                    modifier = Modifier.fillMaxWidth().height(50.dp),
+                    enabled = !state.isLoading
                 ) {
-                    if (viewModel.isLoading) {
+                    if (state.isLoading) {
                         CircularProgressIndicator(
                             color = MaterialTheme.colorScheme.onPrimary,
                             modifier = Modifier.size(24.dp)
@@ -122,9 +116,7 @@ fun LoginScreen(
                     }
                 }
 
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(text = stringResource(R.string.dont_have_account))
                     TextButton(onClick = { onNavigate(Screen.Register) }) {
                         Text(text = stringResource(R.string.register_now))
