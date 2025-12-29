@@ -8,8 +8,8 @@ import androidx.navigation.compose.composable
 import com.example.movieapp.ui.feature.auth.login.LoginScreen
 import com.example.movieapp.ui.feature.auth.register.RegisterScreen
 import com.example.movieapp.ui.feature.detail.DetailScreen
-import com.example.movieapp.ui.feature.favorites.FavoriteListDetailScreen
-import com.example.movieapp.ui.feature.favorites.FavoritesScreen
+import com.example.movieapp.ui.feature.favorites.detail.FavoriteListDetailScreen
+import com.example.movieapp.ui.feature.favorites.home.FavoritesScreen
 import com.example.movieapp.ui.feature.search.SearchScreen
 import com.example.movieapp.ui.feature.settings.SettingsScreen
 import com.example.movieapp.ui.navigation.screen.Screen

@@ -1,4 +1,4 @@
-package com.example.movieapp.ui.feature.favorites
+package com.example.movieapp.ui.feature.favorites.home
 
 import androidx.lifecycle.viewModelScope
 import com.example.movieapp.R

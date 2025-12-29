@@ -1,4 +1,4 @@
-package com.example.movieapp.ui.feature.favorites
+package com.example.movieapp.ui.feature.favorites.detail
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -71,11 +71,7 @@ fun FavoriteListDetailScreen(
     onBackClick: () -> Unit,
     viewModel: FavoriteDetailViewModel = hiltViewModel()
 ) {
-    val movies by viewModel.movies.collectAsStateWithLifecycle()
-    val allLists by viewModel.allLists.collectAsStateWithLifecycle()
-
-    val movieToDelete by viewModel.movieToDelete.collectAsStateWithLifecycle()
-    val movieToMove by viewModel.movieToMove.collectAsStateWithLifecycle()
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
     val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
@@ -109,7 +105,7 @@ fun FavoriteListDetailScreen(
             )
         }
     ) { paddingValues ->
-        if (movies.isEmpty()) {
+        if (state.movies.isEmpty()) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -126,7 +122,7 @@ fun FavoriteListDetailScreen(
                 contentPadding = PaddingValues(16.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                items(movies) { movie ->
+                items(state.movies) { movie ->
                     FavoriteMovieItem(
                         movie = movie,
                         onRemoveClick = { viewModel.onRemoveClick(movie) },
@@ -136,7 +132,7 @@ fun FavoriteListDetailScreen(
             }
         }
 
-        if (movieToDelete != null) {
+        if (state.movieToDelete != null) {
             AlertDialog(
                 onDismissRequest = { viewModel.onDismissDialog() },
                 title = { Text(stringResource(R.string.remove_movie_dialog_title)) },
@@ -144,7 +140,7 @@ fun FavoriteListDetailScreen(
                     Text(
                         stringResource(
                             R.string.remove_movie_dialog_message,
-                            movieToDelete?.title.orEmpty()
+                            state.movieToDelete?.title.orEmpty()
                         )
                     )
                 },
@@ -164,7 +160,7 @@ fun FavoriteListDetailScreen(
             )
         }
 
-        if (movieToMove != null) {
+        if (state.movieToMove != null) {
             ModalBottomSheet(
                 onDismissRequest = { viewModel.onDismissBottomSheet() },
                 sheetState = sheetState
@@ -180,7 +176,7 @@ fun FavoriteListDetailScreen(
                         modifier = Modifier.padding(16.dp)
                     )
 
-                    val availableLists = allLists.filter { it.listId != viewModel.listId }
+                    val availableLists = state.allLists.filter { it.listId != viewModel.listId }
 
                     if (availableLists.isEmpty()) {
                         Text(

@@ -7,8 +7,8 @@ import com.example.movieapp.domain.usecase.favorites.CreateFavoriteListUseCase
 import com.example.movieapp.domain.usecase.favorites.DeleteFavoriteListUseCase
 import com.example.movieapp.domain.usecase.favorites.GetAllFavoriteListsUseCase
 import com.example.movieapp.domain.usecase.favorites.RenameFavoriteListUseCase
-import com.example.movieapp.ui.feature.favorites.FavoritesDialogState
-import com.example.movieapp.ui.feature.favorites.FavoritesViewModel
+import com.example.movieapp.ui.feature.favorites.home.FavoritesDialogState
+import com.example.movieapp.ui.feature.favorites.home.FavoritesViewModel
 import com.example.movieapp.ui.navigation.screen.Screen
 import io.mockk.*
 import io.mockk.impl.annotations.MockK
