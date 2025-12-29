@@ -1,9 +1,6 @@
 package com.example.movieapp.ui.feature.settings
 
 import android.content.Context
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import com.example.movieapp.R
 import com.example.movieapp.common.ui.BaseViewModel
@@ -11,16 +8,13 @@ import com.example.movieapp.common.utl.LocaleHelper
 import com.example.movieapp.data.repository.SettingsRepository
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -31,29 +25,45 @@ class SettingsViewModel @Inject constructor(
     @ApplicationContext private val context: Context
 ) : BaseViewModel() {
 
-    val currentUserState: StateFlow<FirebaseUser?> = callbackFlow {
-        val listener = FirebaseAuth.AuthStateListener { auth ->
-            trySend(auth.currentUser)
+    private val _state = MutableStateFlow(SettingsState())
+    val state = _state.asStateFlow()
+
+    init {
+        _state.update { it.copy(currentLanguage = LocaleHelper.getLanguage(context)) }
+
+        observeTheme()
+        observeAuthState()
+    }
+
+    private fun observeTheme() {
+        viewModelScope.launch {
+            settingsRepository.isDarkTheme.collect { isDark ->
+                _state.update { it.copy(isDarkTheme = isDark) }
+            }
         }
-        auth.addAuthStateListener(listener)
-        awaitClose { auth.removeAuthStateListener(listener) }
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
-        initialValue = auth.currentUser
-    )
+    }
 
-    val isDarkTheme = settingsRepository.isDarkTheme
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
+    private fun observeAuthState() {
+        viewModelScope.launch {
+            callbackFlow {
+                val listener = FirebaseAuth.AuthStateListener { auth ->
+                    trySend(auth.currentUser)
+                }
+                auth.addAuthStateListener(listener)
+                awaitClose { auth.removeAuthStateListener(listener) }
+            }.collect { user ->
+                _state.update { it.copy(currentUser = user) }
+            }
+        }
+    }
 
-    private val _currentLanguage = MutableStateFlow(LocaleHelper.getLanguage(context))
-    val currentLanguage = _currentLanguage.asStateFlow()
+    fun showPasswordDialog() {
+        _state.update { it.copy(isPasswordDialogVisible = true) }
+    }
 
-    var showChangePasswordDialog by mutableStateOf(false)
-        private set
-
-    fun showPasswordDialog() { showChangePasswordDialog = true }
-    fun hidePasswordDialog() { showChangePasswordDialog = false }
+    fun hidePasswordDialog() {
+        _state.update { it.copy(isPasswordDialogVisible = false) }
+    }
 
     fun changePassword(currentPassword: String, newPassword: String) {
         val user = auth.currentUser
@@ -67,9 +77,11 @@ class SettingsViewModel @Inject constructor(
         }
 
         if (newPassword.length < 6) {
-            showSnackbar(messageResId = R.string.error_unknown)
+            showSnackbar(messageResId = R.string.password_length_error)
             return
         }
+
+        _state.update { it.copy(isLoading = true) }
 
         val credential = EmailAuthProvider.getCredential(email, currentPassword)
 
@@ -77,14 +89,16 @@ class SettingsViewModel @Inject constructor(
             .addOnSuccessListener {
                 user.updatePassword(newPassword)
                     .addOnSuccessListener {
-                        hidePasswordDialog()
+                        _state.update { it.copy(isLoading = false, isPasswordDialogVisible = false) }
                         showSnackbar(messageResId = R.string.password_reset_succes)
                     }
                     .addOnFailureListener { e ->
+                        _state.update { it.copy(isLoading = false) }
                         showSnackbar(messageResId = R.string.error_unknown, remoteMessage = e.localizedMessage)
                     }
             }
             .addOnFailureListener { e ->
+                _state.update { it.copy(isLoading = false) }
                 showSnackbar(messageResId = R.string.error_unknown, remoteMessage = e.localizedMessage)
             }
     }
@@ -105,7 +119,7 @@ class SettingsViewModel @Inject constructor(
 
         viewModelScope.launch {
             settingsRepository.updateLanguage(code)
-            _currentLanguage.value = code
+            _state.update { it.copy(currentLanguage = code) }
         }
     }
 }

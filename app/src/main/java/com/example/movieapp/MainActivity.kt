@@ -35,8 +35,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             val viewModel: SettingsViewModel = hiltViewModel()
-            val isDarkTheme by viewModel.isDarkTheme.collectAsStateWithLifecycle()
-            MovieAppTheme(darkTheme = isDarkTheme) {
+            val state by viewModel.state.collectAsStateWithLifecycle()
+            MovieAppTheme(darkTheme = state.isDarkTheme) {
                 val navController = rememberNavController()
 
                 val navBackStackEntry by navController.currentBackStackEntryAsState()

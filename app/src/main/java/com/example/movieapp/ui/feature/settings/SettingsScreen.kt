@@ -38,10 +38,7 @@ fun SettingsScreen(
     onNavigate: (Screen) -> Unit,
     viewModel: SettingsViewModel = hiltViewModel()
 ) {
-    val isDarkTheme by viewModel.isDarkTheme.collectAsStateWithLifecycle()
-    val currentLanguage by viewModel.currentLanguage.collectAsStateWithLifecycle()
-    val currentUser by viewModel.currentUserState.collectAsStateWithLifecycle()
-
+    val state by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
@@ -65,9 +62,11 @@ fun SettingsScreen(
                     snackbarHostState.showSnackbar(message)
                 }
             }
+
             is UiEvent.Navigate -> {
                 onNavigate(event.screen)
             }
+
             else -> Unit
         }
     }
@@ -101,7 +100,7 @@ fun SettingsScreen(
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(
-                            if (isDarkTheme) Icons.Default.Delete else Icons.Default.Add,
+                            if (state.isDarkTheme) Icons.Default.Delete else Icons.Default.Add,
                             contentDescription = null,
                             tint = MaterialTheme.colorScheme.primary
                         )
@@ -109,7 +108,7 @@ fun SettingsScreen(
                         Text(stringResource(R.string.dark_mode_label))
                     }
                     Switch(
-                        checked = isDarkTheme,
+                        checked = state.isDarkTheme,
                         onCheckedChange = { viewModel.updateTheme(it) }
                     )
                 }
@@ -127,12 +126,13 @@ fun SettingsScreen(
 
             SettingsSectionTitle(text = stringResource(R.string.account_title))
 
-            if (currentUser != null) {
+            if (state.currentUser != null) {
                 SettingsCard {
                     Column {
                         SettingsItem(
                             icon = Icons.Default.Person,
-                            title = currentUser?.email ?: stringResource(R.string.default_user_name),
+                            title = state.currentUser?.email
+                                ?: stringResource(R.string.default_user_name),
                             subtitle = stringResource(R.string.logged_in_status),
                             onClick = {}
                         )
@@ -200,7 +200,7 @@ fun SettingsScreen(
 
     if (showLanguageDialog) {
         LanguageSelectionDialog(
-            currentLanguage = currentLanguage,
+            currentLanguage = state.currentLanguage,
             onDismiss = { showLanguageDialog = false },
             onLanguageSelected = { newLanguageCode ->
                 viewModel.updateLanguage(newLanguageCode)
@@ -212,7 +212,7 @@ fun SettingsScreen(
         )
     }
 
-    if (viewModel.showChangePasswordDialog) {
+    if (state.isPasswordDialogVisible) {
         ChangePasswordDialog(
             onDismiss = { viewModel.hidePasswordDialog() },
             onConfirm = { oldPass, newPass ->
