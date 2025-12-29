@@ -52,6 +52,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.example.movieapp.R
 import com.example.movieapp.common.utl.GenreConstants
@@ -68,10 +69,9 @@ fun DetailScreen(
     viewModel: DetailViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
-    val movieState by viewModel.movieState.collectAsState()
+    val state by viewModel.state.collectAsStateWithLifecycle()
     val isFavorite by viewModel.isFavorite.collectAsState()
 
-    val favoriteLists by viewModel.favoriteListsState.collectAsState()
     var showBottomSheet by remember { mutableStateOf(false) }
     val sheetSnackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
@@ -115,9 +115,9 @@ fun DetailScreen(
                 containerColor = MaterialTheme.colorScheme.primary
             ) {
                 Icon(
-                    imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
+                    imageVector = if (state.isFavorite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
                     contentDescription = null,
-                    tint = if (isFavorite) Color.Red else Color.White
+                    tint = if (state.isFavorite) Color.Red else Color.White
                 )
             }
         }
@@ -128,7 +128,7 @@ fun DetailScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            when (val state = movieState) {
+            when (val state = state.movieState) {
                 is Resource.Loading -> {
                     CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
                 }
@@ -243,7 +243,7 @@ fun DetailScreen(
 
     if (showBottomSheet) {
         AddToFavoritesSheet(
-            lists = favoriteLists,
+            lists = state.favoriteLists,
             snackBarHostState = sheetSnackbarHostState,
             onDismiss = { showBottomSheet = false },
             onToggleList = { listId, isChecked ->

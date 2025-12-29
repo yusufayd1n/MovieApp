@@ -37,32 +37,39 @@ class DetailViewModel @Inject constructor(
     private val args = savedStateHandle.toRoute<Screen.Detail>()
     private val movieId = args.movieId
 
-    private val _movieState = MutableStateFlow<Resource<Movie>>(Resource.Loading())
-    val movieState = _movieState.asStateFlow()
-
-    private val _favoriteListsState = MutableStateFlow<List<FavoriteListUiModel>>(emptyList())
-    val favoriteListsState = _favoriteListsState.asStateFlow()
+    private val _state = MutableStateFlow(DetailState())
+    val state = _state.asStateFlow()
 
     val isFavorite = getAllFavoriteMovieIdsUseCase().map { it.contains(movieId) }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
 
     init {
         fetchMovieDetail()
+        observeFavoriteStatus()
     }
 
     private fun fetchMovieDetail() {
         viewModelScope.launch {
-            _movieState.value = Resource.Loading()
+            _state.update { it.copy(movieState = Resource.Loading()) }
+
             val result = getMovieDetailUseCase(movieId)
 
-            _movieState.value = result
+            _state.update { it.copy(movieState = result) }
+        }
+    }
+
+    private fun observeFavoriteStatus() {
+        viewModelScope.launch {
+            getAllFavoriteMovieIdsUseCase().collect { ids ->
+                _state.update { it.copy(isFavorite = ids.contains(movieId)) }
+            }
         }
     }
 
     fun fetchLists() {
         viewModelScope.launch {
             getFavoriteListsForMovieUseCase(movieId).collect { lists ->
-                _favoriteListsState.value = lists
+                _state.update { it.copy(favoriteLists = lists) }
             }
         }
     }
@@ -75,20 +82,22 @@ class DetailViewModel @Inject constructor(
     }
 
     fun toggleMovieInList(listId: Long, isChecked: Boolean) {
-        val currentState = _movieState.value
+        val currentMovieState = _state.value.movieState
 
-        if (currentState is Resource.Success) {
-            val movie = currentState.data
+        if (currentMovieState is Resource.Success) {
+            val movie = currentMovieState.data
 
-            _favoriteListsState.update { currentList ->
-                currentList.map { if (it.id == listId) it.copy(isMovieInList = isChecked) else it }
+            _state.update { currentState ->
+                val updatedLists = currentState.favoriteLists.map {
+                    if (it.id == listId) it.copy(isMovieInList = isChecked) else it
+                }
+                currentState.copy(favoriteLists = updatedLists)
             }
 
             viewModelScope.launch {
                 movie?.let {
                     toggleMovieInListUseCase(listId, movie, isChecked)
                 }
-
                 val messageResId = if (isChecked) R.string.movie_added else R.string.movie_removed
                 showSnackbar(messageResId)
             }
