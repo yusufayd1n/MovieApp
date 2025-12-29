@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Build
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.*
@@ -93,7 +94,7 @@ fun RegisterScreen(
                     leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null) },
                     trailingIcon = {
                         IconButton(onClick = { isPasswordVisible = !isPasswordVisible }) {
-                            Icon(if (isPasswordVisible) Icons.Default.Lock else Icons.Default.Build, contentDescription = null)
+                            Icon(if (isPasswordVisible) Icons.Default.Lock else Icons.Default.Close, contentDescription = null)
                         }
                     }
                 )
@@ -109,7 +110,7 @@ fun RegisterScreen(
                     leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null) },
                     trailingIcon = {
                         IconButton(onClick = { isConfirmPasswordVisible = !isConfirmPasswordVisible }) {
-                            Icon(if (isConfirmPasswordVisible) Icons.Default.Lock else Icons.Default.Build, contentDescription = null)
+                            Icon(if (isConfirmPasswordVisible) Icons.Default.Lock else Icons.Default.Close, contentDescription = null)
                         }
                     }
                 )

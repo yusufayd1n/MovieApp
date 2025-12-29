@@ -113,7 +113,7 @@ fun SearchScreen(
             Spacer(modifier = Modifier.statusBarsPadding())
 
             DockedSearchBar(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
                 query = viewModel.searchQuery,
                 onQueryChange = { viewModel.onQueryChange(it) },
                 onSearch = { query ->

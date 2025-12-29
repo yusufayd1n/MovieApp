@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Build
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.*
@@ -94,7 +95,7 @@ fun LoginScreen(
                     trailingIcon = {
                         IconButton(onClick = { isPasswordVisible = !isPasswordVisible }) {
                             Icon(
-                                if (isPasswordVisible) Icons.Default.Lock else Icons.Default.Build,
+                                if (isPasswordVisible) Icons.Default.Lock else Icons.Default.Close,
                                 contentDescription = null
                             )
                         }
