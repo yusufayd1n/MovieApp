@@ -1,4 +1,4 @@
-package com.example.movieapp.common
+package com.example.movieapp.common.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect

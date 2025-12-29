@@ -3,10 +3,9 @@ package com.example.movieapp.data.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.example.movieapp.R
-import com.example.movieapp.common.Resource
-import com.example.movieapp.data.mapper.toDomain
+import com.example.movieapp.common.utl.Resource
 import com.example.movieapp.data.mapper.toMovie
+import com.example.movieapp.data.paging.MoviePagingSource
 import com.example.movieapp.data.remote.TmdbApi
 import com.example.movieapp.domain.model.Movie
 import com.example.movieapp.domain.repository.MovieRepository

@@ -36,7 +36,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -55,10 +54,10 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.example.movieapp.R
-import com.example.movieapp.common.GenreConstants
-import com.example.movieapp.common.ObserveAsEvents
-import com.example.movieapp.common.Resource
-import com.example.movieapp.common.UiEvent
+import com.example.movieapp.common.utl.GenreConstants
+import com.example.movieapp.common.ui.ObserveAsEvents
+import com.example.movieapp.common.utl.Resource
+import com.example.movieapp.common.ui.UiEvent
 import com.example.movieapp.ui.feature.search.AddToFavoritesSheet
 import kotlinx.coroutines.launch
 

@@ -1,7 +1,7 @@
 package com.example.movieapp
 
 import app.cash.turbine.test
-import com.example.movieapp.common.UiEvent
+import com.example.movieapp.common.ui.UiEvent
 import com.example.movieapp.data.local.entity.FavoriteListEntity
 import com.example.movieapp.domain.usecase.favorites.CreateFavoriteListUseCase
 import com.example.movieapp.domain.usecase.favorites.DeleteFavoriteListUseCase

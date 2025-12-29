@@ -1,7 +1,7 @@
 package com.example.movieapp.di
 
 import com.example.movieapp.BuildConfig
-import com.example.movieapp.common.Constants
+import com.example.movieapp.common.utl.Constants
 import com.example.movieapp.data.remote.TmdbApi
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory

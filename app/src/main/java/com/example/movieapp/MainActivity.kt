@@ -9,10 +9,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -23,15 +21,8 @@ import com.example.movieapp.ui.navigation.screen.Screen
 import com.example.movieapp.ui.theme.MovieAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 import androidx.navigation.NavDestination.Companion.hasRoute
-import com.example.movieapp.common.LocaleHelper
-import com.example.movieapp.data.repository.APP_LANGUAGE
-import com.example.movieapp.data.repository.SettingsRepository
-import com.example.movieapp.data.repository.dataStore
+import com.example.movieapp.common.utl.LocaleHelper
 import com.example.movieapp.ui.feature.settings.SettingsViewModel
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.runBlocking
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {

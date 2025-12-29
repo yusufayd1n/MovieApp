@@ -1,6 +1,6 @@
 package com.example.movieapp.data.mapper
 
-import com.example.movieapp.common.Constants
+import com.example.movieapp.common.utl.Constants
 import com.example.movieapp.data.local.entity.MovieEntity
 import com.example.movieapp.data.remote.model.MovieDto
 import com.example.movieapp.domain.model.Movie

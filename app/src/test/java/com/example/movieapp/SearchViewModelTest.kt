@@ -2,7 +2,7 @@ package com.example.movieapp
 
 import androidx.paging.PagingData
 import app.cash.turbine.test
-import com.example.movieapp.common.UiEvent
+import com.example.movieapp.common.ui.UiEvent
 import com.example.movieapp.domain.model.Movie
 import com.example.movieapp.domain.usecase.favorites.CreateFavoriteListUseCase
 import com.example.movieapp.domain.usecase.favorites.GetAllFavoriteMovieIdsUseCase

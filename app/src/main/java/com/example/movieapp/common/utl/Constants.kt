@@ -1,4 +1,4 @@
-package com.example.movieapp.common
+package com.example.movieapp.common.utl
 
 import com.example.movieapp.R
 

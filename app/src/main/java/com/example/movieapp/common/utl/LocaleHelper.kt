@@ -1,4 +1,4 @@
-package com.example.movieapp.common
+package com.example.movieapp.common.utl
 
 import android.content.Context
 import android.content.SharedPreferences

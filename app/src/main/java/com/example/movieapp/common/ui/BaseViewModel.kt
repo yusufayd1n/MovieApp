@@ -1,6 +1,5 @@
-package com.example.movieapp.common
+package com.example.movieapp.common.ui
 
-import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.channels.Channel

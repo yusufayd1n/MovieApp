@@ -5,8 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import com.example.movieapp.R
-import com.example.movieapp.common.BaseViewModel
-import com.example.movieapp.common.UiEvent
+import com.example.movieapp.common.ui.BaseViewModel
+import com.example.movieapp.common.ui.UiEvent
 import com.example.movieapp.ui.navigation.screen.Screen
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel

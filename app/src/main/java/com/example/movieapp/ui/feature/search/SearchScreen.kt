@@ -30,8 +30,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.movieapp.R
-import com.example.movieapp.common.ObserveAsEvents
-import com.example.movieapp.common.UiEvent
+import com.example.movieapp.common.ui.ObserveAsEvents
+import com.example.movieapp.common.ui.UiEvent
 import com.example.movieapp.data.local.entity.SearchHistoryEntity
 import com.example.movieapp.domain.model.Movie
 import com.example.movieapp.ui.components.FilterBottomSheet

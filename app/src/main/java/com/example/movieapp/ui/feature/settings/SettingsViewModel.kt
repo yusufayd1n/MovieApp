@@ -6,8 +6,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import com.example.movieapp.R
-import com.example.movieapp.common.BaseViewModel
-import com.example.movieapp.common.LocaleHelper
+import com.example.movieapp.common.ui.BaseViewModel
+import com.example.movieapp.common.utl.LocaleHelper
 import com.example.movieapp.data.repository.SettingsRepository
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth

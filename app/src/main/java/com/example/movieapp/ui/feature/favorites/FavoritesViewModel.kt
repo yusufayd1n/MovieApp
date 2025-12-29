@@ -2,8 +2,8 @@ package com.example.movieapp.ui.feature.favorites
 
 import androidx.lifecycle.viewModelScope
 import com.example.movieapp.R
-import com.example.movieapp.common.BaseViewModel
-import com.example.movieapp.common.UiEvent
+import com.example.movieapp.common.ui.BaseViewModel
+import com.example.movieapp.common.ui.UiEvent
 import com.example.movieapp.data.local.entity.FavoriteListEntity
 import com.example.movieapp.domain.usecase.favorites.CreateFavoriteListUseCase
 import com.example.movieapp.domain.usecase.favorites.DeleteFavoriteListUseCase

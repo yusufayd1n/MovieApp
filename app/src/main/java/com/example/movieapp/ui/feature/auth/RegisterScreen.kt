@@ -18,8 +18,8 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.movieapp.R
-import com.example.movieapp.common.ObserveAsEvents
-import com.example.movieapp.common.UiEvent
+import com.example.movieapp.common.ui.ObserveAsEvents
+import com.example.movieapp.common.ui.UiEvent
 import com.example.movieapp.ui.navigation.screen.Screen
 import kotlinx.coroutines.launch
 

@@ -41,7 +41,6 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -59,8 +58,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.example.movieapp.R
-import com.example.movieapp.common.ObserveAsEvents
-import com.example.movieapp.common.UiEvent
+import com.example.movieapp.common.ui.ObserveAsEvents
+import com.example.movieapp.common.ui.UiEvent
 import com.example.movieapp.domain.model.Movie
 import kotlinx.coroutines.launch
 

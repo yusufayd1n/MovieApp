@@ -17,9 +17,8 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.example.movieapp.R
-import com.example.movieapp.common.GenreConstants
+import com.example.movieapp.common.utl.GenreConstants
 import com.example.movieapp.ui.feature.search.FilterState
-import com.example.movieapp.ui.feature.search.SearchViewModel
 import com.example.movieapp.ui.feature.search.SortOption
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)

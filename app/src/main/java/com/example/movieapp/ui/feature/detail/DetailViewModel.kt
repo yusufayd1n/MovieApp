@@ -4,9 +4,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.example.movieapp.R
-import com.example.movieapp.common.BaseViewModel
-import com.example.movieapp.common.Resource
-import com.example.movieapp.common.UiEvent
+import com.example.movieapp.common.ui.BaseViewModel
+import com.example.movieapp.common.utl.Resource
 import com.example.movieapp.domain.model.Movie
 import com.example.movieapp.domain.usecase.detail.GetMovieDetailUseCase
 import com.example.movieapp.domain.usecase.favorites.CreateFavoriteListUseCase

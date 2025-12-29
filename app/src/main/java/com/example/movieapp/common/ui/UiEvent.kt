@@ -1,4 +1,4 @@
-package com.example.movieapp.common
+package com.example.movieapp.common.ui
 
 import com.example.movieapp.ui.navigation.screen.Screen
 
