@@ -66,7 +66,7 @@ class MainActivity : ComponentActivity() {
                     Surface(
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(innerPadding)
+                            .padding(bottom = innerPadding.calculateBottomPadding())
                     ) {
                         MovieNavHost(navController = navController)
                     }

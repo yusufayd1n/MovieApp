@@ -65,11 +65,9 @@ fun SettingsScreen(
                     snackbarHostState.showSnackbar(message)
                 }
             }
-
             is UiEvent.Navigate -> {
                 onNavigate(event.screen)
             }
-
             else -> Unit
         }
     }
@@ -104,13 +102,16 @@ fun SettingsScreen(
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(
                             if (isDarkTheme) Icons.Default.Delete else Icons.Default.Add,
-                            null,
+                            contentDescription = null,
                             tint = MaterialTheme.colorScheme.primary
                         )
                         Spacer(Modifier.width(16.dp))
                         Text(stringResource(R.string.dark_mode_label))
                     }
-                    Switch(checked = isDarkTheme, onCheckedChange = { viewModel.updateTheme(it) })
+                    Switch(
+                        checked = isDarkTheme,
+                        onCheckedChange = { viewModel.updateTheme(it) }
+                    )
                 }
             }
 
@@ -131,8 +132,7 @@ fun SettingsScreen(
                     Column {
                         SettingsItem(
                             icon = Icons.Default.Person,
-                            title = currentUser?.email
-                                ?: stringResource(R.string.default_user_name),
+                            title = currentUser?.email ?: stringResource(R.string.default_user_name),
                             subtitle = stringResource(R.string.logged_in_status),
                             onClick = {}
                         )
@@ -140,7 +140,7 @@ fun SettingsScreen(
                         SettingsItem(
                             icon = Icons.Default.Lock,
                             title = stringResource(R.string.change_password_action),
-                            onClick = { viewModel.showPasswordDialog()}
+                            onClick = { viewModel.showPasswordDialog() }
                         )
                         HorizontalDivider()
                         SettingsItem(
@@ -183,10 +183,13 @@ fun SettingsScreen(
 
             Spacer(modifier = Modifier.weight(1f))
 
-            Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
                 appVersion?.let {
                     Text(
-                        stringResource(R.string.version_format, appVersion),
+                        text = stringResource(R.string.version_format, appVersion),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -229,20 +232,20 @@ fun ChangePasswordDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Şifre Değiştir") },
+        title = { Text(stringResource(R.string.change_password_title)) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 OutlinedTextField(
                     value = currentPassword,
                     onValueChange = { currentPassword = it },
-                    label = { Text("Mevcut Şifre") },
+                    label = { Text(stringResource(R.string.current_password_label)) },
                     visualTransformation = PasswordVisualTransformation(),
                     singleLine = true
                 )
                 OutlinedTextField(
                     value = newPassword,
                     onValueChange = { newPassword = it },
-                    label = { Text("Yeni Şifre") },
+                    label = { Text(stringResource(R.string.new_password_label)) },
                     visualTransformation = PasswordVisualTransformation(),
                     singleLine = true
                 )
@@ -250,12 +253,12 @@ fun ChangePasswordDialog(
         },
         confirmButton = {
             Button(onClick = { onConfirm(currentPassword, newPassword) }) {
-                Text("Güncelle")
+                Text(stringResource(R.string.update_action))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("İptal")
+                Text(stringResource(R.string.cancel_action))
             }
         }
     )
@@ -277,9 +280,7 @@ fun SettingsCard(content: @Composable ColumnScope.() -> Unit) {
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(
-                alpha = 0.5f
-            )
+            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
         ),
         elevation = CardDefaults.cardElevation(0.dp)
     ) {
@@ -348,9 +349,9 @@ fun LanguageSelectionDialog(
                         onClick = { onLanguageSelected("tr") }
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Türkçe")
+                    Text(stringResource(R.string.language_turkish))
                 }
-//TODO
+
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -363,7 +364,7 @@ fun LanguageSelectionDialog(
                         onClick = { onLanguageSelected("en") }
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("English")
+                    Text(stringResource(R.string.language_english))
                 }
             }
         },

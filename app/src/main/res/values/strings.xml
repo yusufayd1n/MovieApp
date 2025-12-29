@@ -132,4 +132,8 @@
     <string name="current_password_label">Current Password</string>
     <string name="new_password_label">New Password</string>
     <string name="update_action">Update</string>
+    <string name="no_lists_yet_title">No lists yet</string>
+    <string name="create_list_promo_text">You can create a new favorite list using the button at the bottom right.</string>
+    <string name="language_turkish">Turkish</string>
+    <string name="language_english">English</string>
 </resources>

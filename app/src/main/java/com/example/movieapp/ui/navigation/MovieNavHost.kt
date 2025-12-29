@@ -5,7 +5,6 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.toRoute
 import com.example.movieapp.ui.feature.auth.LoginScreen
 import com.example.movieapp.ui.feature.auth.RegisterScreen
 import com.example.movieapp.ui.feature.detail.DetailScreen
@@ -37,6 +36,9 @@ fun MovieNavHost(
             FavoritesScreen(
                 onNavigate = { screen ->
                     navController.navigate(screen)
+                },
+                onBackPressed = {
+                    navController.popBackStack()
                 }
             )
         }

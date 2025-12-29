@@ -133,4 +133,8 @@
     <string name="current_password_label">Mevcut Şifre</string>
     <string name="new_password_label">Yeni Şifre</string>
     <string name="update_action">Güncelle</string>
+    <string name="no_lists_yet_title">Henüz liste yok</string>
+    <string name="create_list_promo_text">Sağ alttaki butonu kullanarak yeni bir favori listesi oluşturabilirsiniz.</string>
+    <string name="language_turkish">Türkçe</string>
+    <string name="language_english">English</string>
 </resources>
