@@ -1,6 +1,7 @@
 package com.example.movieapp
 
 import app.cash.turbine.test
+import com.example.movieapp.R
 import com.example.movieapp.common.ui.UiEvent
 import com.example.movieapp.data.local.entity.FavoriteListEntity
 import com.example.movieapp.domain.usecase.favorites.CreateFavoriteListUseCase
@@ -39,7 +40,7 @@ class FavoritesViewModelTest {
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        
+
         every { getAllListsUseCase() } returns flowOf(emptyList())
 
         viewModel = FavoritesViewModel(
@@ -51,40 +52,52 @@ class FavoritesViewModelTest {
     }
 
     @Test
-    fun `onAddListClicked updates dialogState to Create`() = runTest {
-        viewModel.onAddListClicked()
+    fun `onAddListClicked updates state with dialogState Create`() = runTest {
+        viewModel.state.test {
+            awaitItem()
 
-        viewModel.dialogState.test {
-            assertEquals(FavoritesDialogState.Create, awaitItem())
+            viewModel.onAddListClicked()
+
+            val newState = awaitItem()
+            assertEquals(FavoritesDialogState.Create, newState.dialogState)
         }
     }
 
     @Test
-    fun `onDeleteListClicked updates dialogState to Delete`() = runTest {
+    fun `onDeleteListClicked updates state with dialogState Delete`() = runTest {
         val list = FavoriteListEntity(listId = 1, listName = "My List")
 
-        viewModel.onDeleteListClicked(list)
+        viewModel.state.test {
+            awaitItem()
 
-        viewModel.dialogState.test {
-            val state = awaitItem()
-            assertTrue(state is FavoritesDialogState.Delete)
-            assertEquals(list, (state as FavoritesDialogState.Delete).list)
+            viewModel.onDeleteListClicked(list)
+
+            val newState = awaitItem()
+            assertTrue(newState.dialogState is FavoritesDialogState.Delete)
+            assertEquals(list, (newState.dialogState as FavoritesDialogState.Delete).list)
         }
     }
-    
+
     @Test
-    fun `createList calls useCase, dismisses dialog and shows snackbar`() = runTest {
+    fun `createList calls useCase, resets dialogState and shows snackbar`() = runTest {
         val listName = "New List"
         coEvery { createListUseCase(listName) } just Runs
 
         viewModel.onAddListClicked()
 
-        viewModel.createList(listName)
+        viewModel.state.test {
+            val currentState = awaitItem()
+            assertEquals(FavoritesDialogState.Create, currentState.dialogState)
+
+            // When
+            viewModel.createList(listName)
+
+            val newState = awaitItem()
+            assertEquals(FavoritesDialogState.None, newState.dialogState)
+        }
 
         coVerify { createListUseCase(listName) }
-        
-        assertEquals(FavoritesDialogState.None, viewModel.dialogState.value)
-        
+
         viewModel.uiEvent.test {
             val event = awaitItem()
             assertTrue(event is UiEvent.ShowSnackbar)
@@ -100,7 +113,8 @@ class FavoritesViewModelTest {
         viewModel.deleteList(listId)
 
         coVerify { deleteListUseCase(listId) }
-        assertEquals(FavoritesDialogState.None, viewModel.dialogState.value)
+
+        assertEquals(FavoritesDialogState.None, viewModel.state.value.dialogState)
 
         viewModel.uiEvent.test {
             val event = awaitItem()
